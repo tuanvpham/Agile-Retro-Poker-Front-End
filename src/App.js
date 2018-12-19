@@ -1,36 +1,82 @@
 import React, { Component } from "react";
+import { Button, FormGroup, FormControl, ControlLabel } from "react-bootstrap";
 import axios from "axios";
 import logo from "./logo.svg";
 import "./App.css";
 
 class App extends Component {
-  render() {
-    return (
-      <div className="App">
-        <header className="App-header">
-          <img src={logo} className="App-logo" alt="logo" />
-          <p>Delloitte Agile Command Central ~</p>
-          <div>
-            <button type="button" onClick={this.onClick}>
-              Send GET request
-            </button>
-            <p />
-          </div>
-        </header>
-      </div>
-    );
+  constructor(props) {
+    super(props);
+
+    this.state = {
+      email: "",
+      password: ""
+    };
   }
 
-  onClick(ev) {
-    console.log("Sending a GET API request!!!");
-    axios
-      .get("http://127.0.0.1:8000/core/")
-      .then(res => {
-        console.log(res);
-      })
-      .then(response => {
-        console.log(JSON.stringify(response));
-      });
+  validateForm() {
+    return this.state.email.length > 0 && this.state.password.length > 0;
+  }
+
+  handleChange = event => {
+    this.setState({
+      [event.target.id]: event.target.value
+    });
+  }
+
+  handleSubmit = event => {
+    event.preventDefault();
+    const user = {
+      email: this.state.email,
+      password: this.state.password
+    }
+    try {
+      console.log("Sending a POST API request!!");
+      axios
+        .post("http://127.0.0.1:8000/api/users/login", { user })
+        .then(res => {
+          console.log(res);
+        })
+        .then(response => {
+          console.log(JSON.stringify(response));
+        });
+    } catch (e) {
+      alert(e.message);
+    }
+  }
+
+  render() {
+    return (
+      <div className="Login">
+        <form onSubmit={this.handleSubmit}>
+          <FormGroup controlId="email" bsSize="large">
+            <ControlLabel>Email</ControlLabel>
+            <FormControl
+              autoFocus
+              type="email"
+              value={this.state.email}
+              onChange={this.handleChange}
+            />
+          </FormGroup>
+          <FormGroup controlId="password" bsSize="large">
+            <ControlLabel>Password</ControlLabel>
+            <FormControl
+              value={this.state.password}
+              onChange={this.handleChange}
+              type="password"
+            />
+          </FormGroup>
+          <Button
+            block
+            bsSize="large"
+            disabled={!this.validateForm()}
+            type="submit"
+          >
+            Login
+          </Button>
+        </form>
+      </div>
+    );
   }
 }
 
