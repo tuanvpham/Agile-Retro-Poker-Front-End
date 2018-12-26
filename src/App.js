@@ -1,7 +1,9 @@
-import React, { Component } from "react";
-import { Button, FormGroup, FormControl, ControlLabel } from "react-bootstrap";
-import axios from "axios";
-import logo from "./logo.svg";
+import React, { Component, Fragment } from "react";
+import { Link, withRouter } from "react-router-dom";
+import { Nav, Navbar, NavItem } from "react-bootstrap";
+import { LinkContainer } from "react-router-bootstrap";
+import Routes from "./Routes";
+import axios from 'axios';
 import "./App.css";
 
 class App extends Component {
@@ -9,75 +11,79 @@ class App extends Component {
     super(props);
 
     this.state = {
-      email: "",
-      password: ""
+      isAuthenticated: false,
+      isAuthenticating: true,
+      token: ""
     };
   }
 
-  validateForm() {
-    return this.state.email.length > 0 && this.state.password.length > 0;
-  }
-
-  handleChange = event => {
-    this.setState({
-      [event.target.id]: event.target.value
-    });
-  }
-
-  handleSubmit = event => {
-    event.preventDefault();
-    const user = {
-      email: this.state.email,
-      password: this.state.password
-    }
+  async componentDidMount() {
     try {
-      console.log("Sending a POST API request!!");
-      axios
-        .post("http://127.0.0.1:8000/api/users/login", { user })
-        .then(res => {
-          console.log(res);
-        })
-        .then(response => {
-          console.log(JSON.stringify(response));
-        });
-    } catch (e) {
-      alert(e.message);
+      // await Auth.currentSession();
+      // Django: validating current session of a user API
+
+      this.userHasAuthenticated(true);
     }
+    catch (e) {
+      if (e !== 'No current user') {
+        alert(e);
+      }
+    }
+
+    this.setState({ isAuthenticating: false });
   }
+
+  userHasAuthenticated = authenticated => {
+    this.setState({ isAuthenticated: authenticated });
+  }
+
+  userToken = token => {
+    this.setState({token: token});
+  }
+
+  handleLogout = event => {
+    // Django: logout user api
+    
+    this.userHasAuthenticated(false);
+    this.props.history.push("/login");
+  }
+
+  
 
   render() {
+    const childProps = {
+      isAuthenticated: this.state.isAuthenticated,
+      userHasAuthenticated: this.userHasAuthenticated,
+      token: this.userToken
+    };
+
     return (
-      <div className="Login">
-        <form onSubmit={this.handleSubmit}>
-          <FormGroup controlId="email" bsSize="large">
-            <ControlLabel>Email</ControlLabel>
-            <FormControl
-              autoFocus
-              type="email"
-              value={this.state.email}
-              onChange={this.handleChange}
-            />
-          </FormGroup>
-          <FormGroup controlId="password" bsSize="large">
-            <ControlLabel>Password</ControlLabel>
-            <FormControl
-              value={this.state.password}
-              onChange={this.handleChange}
-              type="password"
-            />
-          </FormGroup>
-          <Button
-            block
-            bsSize="large"
-            disabled={!this.validateForm()}
-            type="submit"
-          >
-            Login
-          </Button>
-        </form>
+      <div className="App container">
+        <Navbar fluid collapseOnSelect>
+          <Navbar.Header>
+            <Navbar.Brand>
+              <Link to="/">Agile Command Central</Link>
+            </Navbar.Brand>
+            <Navbar.Toggle />
+          </Navbar.Header>
+          <Navbar.Collapse>
+            <Nav pullRight>
+              {this.state.isAuthenticated ? <NavItem onClick={this.handleLogout}>Logout</NavItem> : <Fragment>
+                  <LinkContainer to="/signup">
+                    <NavItem>Signup</NavItem>
+                  </LinkContainer>
+                  <LinkContainer to="/login">
+                    <NavItem>Login</NavItem>
+                  </LinkContainer>
+                </Fragment>
+              }
+            </Nav>
+          </Navbar.Collapse>
+        </Navbar>
+        <Routes childProps={childProps} />
       </div>
     );
   }
 }
 
-export default App;
+export default withRouter(App);
