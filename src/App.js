@@ -1,89 +1,92 @@
-import React, { Component, Fragment } from "react";
-import { Link, withRouter } from "react-router-dom";
-import { Nav, Navbar, NavItem } from "react-bootstrap";
-import { LinkContainer } from "react-router-bootstrap";
-import Routes from "./Routes";
-import axios from 'axios';
-import "./App.css";
+import React, { Component } from 'react';
+import Login from './components/Login';
+import Home from './components/Home';
+import './App.css';
 
 class App extends Component {
-  constructor(props) {
-    super(props);
-
-    this.state = {
-      isAuthenticated: false,
-      isAuthenticating: true,
-      token: ""
-    };
-  }
-
-  async componentDidMount() {
-    try {
-      // await Auth.currentSession();
-      // Django: validating current session of a user API
-
-      this.userHasAuthenticated(true);
-    }
-    catch (e) {
-      if (e !== 'No current user') {
-        alert(e);
-      }
+    constructor(props) {
+        super(props);
+        this.state = {
+            logged_in: localStorage.getItem('token') ? true : false,
+            username: ''
+        };
     }
 
-    this.setState({ isAuthenticating: false });
-  }
+    componentDidMount() {
+        if (this.state.logged_in) {
+            fetch('http://localhost:8000/current_user/', {
+                headers: {
+                    Authorization: `JWT ${localStorage.getItem('token')}`
+                }
+            })
+                .then(res => res.json())
+                .then(json => {
+                    this.setState({ username: json.username });
+                });
+        }
+    }
 
-  userHasAuthenticated = authenticated => {
-    this.setState({ isAuthenticated: authenticated });
-  }
-
-  userToken = token => {
-    this.setState({token: token});
-  }
-
-  handleLogout = event => {
-    // Django: logout user api
-    
-    this.userHasAuthenticated(false);
-    this.props.history.push("/login");
-  }
-
-  
-
-  render() {
-    const childProps = {
-      isAuthenticated: this.state.isAuthenticated,
-      userHasAuthenticated: this.userHasAuthenticated,
-      token: this.userToken
+    handle_authentication = (e, data) => {
+        e.preventDefault();
+        fetch('http://localhost:8000/users/', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(data)
+        })
+        .then(res => res.json())
+        .then(json => {
+            localStorage.setItem('token', json.token);
+            this.setState({
+                logged_in: true,
+                displayed_form: '',
+                username: json.username
+            });
+        });
     };
 
-    return (
-      <div className="App container">
-        <Navbar fluid collapseOnSelect>
-          <Navbar.Header>
-            <Navbar.Brand>
-              <Link to="/">Agile Command Central</Link>
-            </Navbar.Brand>
-            <Navbar.Toggle />
-          </Navbar.Header>
-          <Navbar.Collapse>
-            <Nav pullRight>
-              {this.state.isAuthenticated ? <NavItem onClick={this.handleLogout}>Logout</NavItem> : <Fragment>
-                  <LinkContainer to="/signup">
-                    <NavItem>Signup</NavItem>
-                  </LinkContainer>
-                  <LinkContainer to="/login">
-                    <NavItem>Login</NavItem>
-                  </LinkContainer>
-                </Fragment>
-              }
-            </Nav>
-          </Navbar.Collapse>
-        </Navbar>
-        <Routes childProps={childProps} />
-      </div>
-    );
-  }
+    handle_logout = () => {
+        localStorage.removeItem('token');
+        this.setState({ logged_in: false, username: '' });
+    };
+
+    render() {
+        return (
+            <div>
+                {this.state.logged_in ? 
+                    <Home handle_logout={this.handle_logout} username={this.state.username} /> : 
+                    <Login handle_authentication={this.handle_authentication} />
+                }
+            </div>
+
+        );
+        // let form;
+        // switch (this.state.displayed_form) {
+        //     case 'signup':
+        //         form = <Login handle_signup={this.handle_authentication} />;
+        //         break;
+        //     default:
+        //         form = null;
+        // }
+
+        // return (
+        //     <div className="App">
+        //         <Nav
+        //             logged_in={this.state.logged_in}
+        //             display_form={this.display_form}
+        //             handle_logout={this.handle_logout}
+        //         />
+        //         {form}
+        //         <h3>
+        //             {this.state.logged_in
+        //                 ? `Hello, ${this.state.username}`
+        //                 : 'Please Log In'}
+        //         </h3>
+        //     </div>
+        // );
+
+    }
 }
 
-export default withRouter(App);
+export default App;
