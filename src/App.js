@@ -59,33 +59,7 @@ class App extends Component {
                     <Login handle_authentication={this.handle_authentication} />
                 }
             </div>
-
         );
-        // let form;
-        // switch (this.state.displayed_form) {
-        //     case 'signup':
-        //         form = <Login handle_signup={this.handle_authentication} />;
-        //         break;
-        //     default:
-        //         form = null;
-        // }
-
-        // return (
-        //     <div className="App">
-        //         <Nav
-        //             logged_in={this.state.logged_in}
-        //             display_form={this.display_form}
-        //             handle_logout={this.handle_logout}
-        //         />
-        //         {form}
-        //         <h3>
-        //             {this.state.logged_in
-        //                 ? `Hello, ${this.state.username}`
-        //                 : 'Please Log In'}
-        //         </h3>
-        //     </div>
-        // );
-
     }
 }
 
