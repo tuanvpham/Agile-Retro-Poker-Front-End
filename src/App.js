@@ -27,7 +27,8 @@ class App extends Component {
     }
 
     handle_authentication = (e, data) => {
-        e.preventDefault();
+        e.preventDefault()
+        let resStatus = 0
         fetch('http://localhost:8000/users/', {
             method: 'POST',
             headers: {
@@ -35,15 +36,37 @@ class App extends Component {
             },
             body: JSON.stringify(data)
         })
-        .then(res => res.json())
+        .then(
+            res => {
+                resStatus = res.status
+                console.log(resStatus)
+                return res.json()
+            }
+        )
         .then(json => {
-            localStorage.setItem('token', json.token);
-            this.setState({
-                logged_in: true,
-                displayed_form: '',
-                username: json.username
-            });
-        });
+            switch (resStatus) {
+                case 400:
+                    console.log("Cannot create new user on API")
+                    break
+                case 401:
+                    console.log("Wrong username or password")
+                    break
+                case 408:
+                    console.log("Jira authenticated timed out")
+                    break
+                case 500:
+                    console.log("Internal server error")
+                    break
+                default:
+                    localStorage.setItem('token', json.token)
+                    this.setState({
+                        logged_in: true,
+                        username: json.username
+                    })
+                    break
+            }
+        })
+        .catch(err => console.log("Cannot connect to API"));
     };
 
     handle_logout = () => {
