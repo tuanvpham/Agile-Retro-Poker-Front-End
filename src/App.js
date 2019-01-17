@@ -30,8 +30,7 @@ class App extends Component {
                 switch (this.state.resStatus) {
                     case 401:
                         console.log("You shall not pass")
-                        // The token is expired
-                        // We need to redirect user back to login page here
+                        this.setState({logged_in: false})
                         break;
                     default:
                         console.log("Yay!")
