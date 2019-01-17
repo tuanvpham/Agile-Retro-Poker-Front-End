@@ -8,7 +8,8 @@ class App extends Component {
         super(props);
         this.state = {
             logged_in: localStorage.getItem('token') ? true : false,
-            username: ''
+            username: '',
+            resStatus: 0
         };
     }
 
@@ -19,10 +20,26 @@ class App extends Component {
                     Authorization: `JWT ${localStorage.getItem('token')}`
                 }
             })
-                .then(res => res.json())
-                .then(json => {
-                    this.setState({ username: json.username });
-                });
+            .then(
+                res => {
+                    this.setState({resStatus: res.status})
+                    res.json()
+                }
+            )
+            .then(json => {
+                switch (this.state.resStatus) {
+                    case 401:
+                        console.log("You shall not pass")
+                        // The token is expired
+                        // We need to redirect user back to login page here
+                        break;
+                    default:
+                        console.log("Yay!")
+                        this.setState({ username: json.username });
+                        break;
+                }
+                
+            });
         }
     }
 
