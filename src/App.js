@@ -15,7 +15,7 @@ class App extends Component {
 
     componentDidMount() {
         if (this.state.logged_in) {
-            fetch('http://localhost:8000/current_user/', {
+            fetch('http://localhost:8000/current-user/', {
                 headers: {
                     Authorization: `JWT ${localStorage.getItem('token')}`
                 }
