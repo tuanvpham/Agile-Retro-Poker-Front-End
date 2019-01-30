@@ -1,48 +1,121 @@
-import React from 'react';
-import PropTypes from 'prop-types';
+import React, { Component } from "react";
+import PropTypes from "prop-types";
+import { withRouter } from "react-router-dom";
+import { connect } from "react-redux";
 
-class Login extends React.Component {
-    state = {
-        email: '',
-        password: ''
+import classnames from "classnames";
+import { loginUser } from "../actions/authActions";
+
+import "./Login.css";
+
+class Login extends Component {
+  constructor() {
+    super();
+    this.state = {
+      email: "",
+      password: "",
+      errors: {}
     };
 
-    handle_change = e => {
-        const name = e.target.name;
-        const value = e.target.value;
-        this.setState(prevstate => {
-            const newState = { ...prevstate };
-            newState[name] = value;
-            return newState;
-        });
+    this.onChange = this.onChange.bind(this);
+    this.onSubmit = this.onSubmit.bind(this);
+  }
+
+  onSubmit(e) {
+    e.preventDefault();
+
+    const user = {
+      email: this.state.email,
+      password: this.state.password
     };
 
-    render() {
-        return (
-            <form onSubmit={e => this.props.handle_authentication(e, this.state)}>
-                <h4>Sign Up</h4>
-                <label htmlFor="email">Email</label>
-                <input
-                    type="text"
-                    name="email"
-                    value={this.state.email}
-                    onChange={this.handle_change}
-                />
-                <label htmlFor="password">Password</label>
-                <input
-                    type="password"
-                    name="password"
-                    value={this.state.password}
-                    onChange={this.handle_change}
-                />
-                <input type="submit" />
-            </form>
-        );
+    // passing this.props.history allows us to redirect within the login action
+    this.props.loginUser(user, this.props.history);
+  }
+
+  onChange(e) {
+    this.setState({ [e.target.name]: e.target.value });
+  }
+
+  // if user is already logged in, redirect
+  componentDidMount() {
+    if (this.props.auth.isAuthenticated) {
+      this.props.history.push("/home");
     }
+  }
+
+  // runs when our component receives new properties
+  componentWillReceiveProps(nextProps) {
+    // if an error is recieved, set it in our component state
+    if (nextProps.errors) {
+      this.setState({ errors: nextProps.errors });
+    }
+  }
+
+  render() {
+    // errors stored in the state
+    // equivalent to const errors = this.state.errors;
+    // destructuring allows you to pull error out of this.state
+    const { errors } = this.state;
+
+    return (
+      <div className="login">
+        <div className="wrapper">
+          <div id="formContent" className="row">
+            <form onSubmit={this.onSubmit}>
+              <input
+                type="text"
+                name="email"
+                // form-control form-control-lg will always be in effect,
+                // is-invalid will only activate if we get errors.message
+                className={classnames("form-control form-control-lg", {
+                  "is-invalid": errors.message
+                })}
+                placeholder="Email Address"
+                value={this.state.email}
+                onChange={this.onChange}
+              />
+              <input
+                type="password"
+                placeholder="Password"
+                name="password"
+                className={classnames("form-control form-control-lg", {
+                  "is-invalid": errors.message
+                })}
+                value={this.state.password}
+                onChange={this.onChange}
+              />
+              {errors.message && (
+                <div className="invalid-feedback">{errors.message}</div>
+              )}
+              <div id="formFooter">
+                <input
+                  type="submit"
+                  value="Log in with Jira"
+                  className="btn btn-info btn-block mt-4"
+                />
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+    );
+  }
 }
 
-export default Login;
-
 Login.propTypes = {
-    handle_authentication: PropTypes.func.isRequired
+  loginUser: PropTypes.func.isRequired,
+  auth: PropTypes.object.isRequired,
+  errors: PropTypes.object.isRequired
 };
+
+const mapStateToProps = state => ({
+  // names are chosen in root reducer
+  auth: state.auth,
+  errors: state.errors
+});
+
+export default connect(
+  mapStateToProps,
+  { loginUser }
+)(withRouter(Login));
