@@ -1,2 +1,9 @@
 export const GET_ERRORS = "GET_ERRORS";
 export const SET_CURRENT_USER = "SET_CURRENT_USER";
+
+// session types
+export const GET_SESSION = "GET_SESSION";
+export const SESSION_LOADING = "SESSION_LOADING";
+export const SESSION_NOT_FOUND = "SESSION_NOT_FOUND";
+export const CLEAR_CURRENT_SESSION = "CLEAR_CURRENT_SESSION";
+export const GET_SESSIONS = "GET_SESSIONS";

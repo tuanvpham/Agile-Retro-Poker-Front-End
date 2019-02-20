@@ -5,8 +5,9 @@ import { connect } from "react-redux";
 
 import classnames from "classnames";
 import { loginUser } from "../actions/authActions";
+import TextFieldGroup from "./common/TextFieldGroup";
 
-import "./Login.css";
+import "./styling/Login.css";
 
 class Login extends Component {
   constructor() {
@@ -39,7 +40,10 @@ class Login extends Component {
 
   // if user is already logged in, redirect
   componentDidMount() {
+    console.log(this.props.auth.isAuthenticated);
     if (this.props.auth.isAuthenticated) {
+      console.log(this.props.auth.isAuthenticated);
+      console.log(this.props.auth.isAuthenticated);
       this.props.history.push("/home");
     }
   }
@@ -53,6 +57,9 @@ class Login extends Component {
   }
 
   render() {
+    if (this.props.auth.isAuthenticated) {
+      this.props.history.push("/home");
+    }
     // errors stored in the state
     // equivalent to const errors = this.state.errors;
     // destructuring allows you to pull error out of this.state
@@ -61,33 +68,26 @@ class Login extends Component {
     return (
       <div className="login">
         <div className="wrapper">
-          <div id="formContent" className="row">
+          <div id="formContent">
             <form onSubmit={this.onSubmit}>
-              <input
-                type="text"
-                name="email"
-                // form-control form-control-lg will always be in effect,
-                // is-invalid will only activate if we get errors.message
-                className={classnames("form-control form-control-lg", {
-                  "is-invalid": errors.message
-                })}
+              <TextFieldGroup
                 placeholder="Email Address"
+                name="email"
+                type="text"
                 value={this.state.email}
                 onChange={this.onChange}
+                error={errors.message}
               />
-              <input
-                type="password"
+
+              <TextFieldGroup
                 placeholder="Password"
                 name="password"
-                className={classnames("form-control form-control-lg", {
-                  "is-invalid": errors.message
-                })}
+                type="password"
                 value={this.state.password}
                 onChange={this.onChange}
+                error={errors.message}
               />
-              {errors.message && (
-                <div className="invalid-feedback">{errors.message}</div>
-              )}
+
               <div id="formFooter">
                 <input
                   type="submit"

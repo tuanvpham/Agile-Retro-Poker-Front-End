@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { BrowserRouter as Router, Route } from "react-router-dom";
+import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
 import setAuthToken from "./utils/setAuthToken";
 import { setCurrentUser, logoutUser } from "./actions/authActions";
 import axios from "axios";
@@ -9,9 +9,13 @@ import jwt_decode from "jwt-decode";
 import { Provider } from "react-redux";
 import store from "./store";
 
+import PrivateRoute from "./components/common/PrivateRoute";
+
 // components
 import Login from "./components/Login";
 import Home from "./components/Home";
+import Dashboard from "./components/dashboard/Dashboard";
+import RetroBoard from "./components/retroboard/RetroBoard";
 import Navbar from "./components/layout/Navbar";
 
 import "./App.css";
@@ -47,49 +51,6 @@ if (localStorage.jwtToken) {
 }
 
 class App extends Component {
-  /*constructor(props) {
-    super(props);
-    this.state = {
-      logged_in: false,
-      username: ""
-    };
-  }*/
-
-  /*componentDidMount() {
-    if (this.state.logged_in) {
-      fetch("http://localhost:8000/current_user/")
-        .then(res => res.json())
-        .then(json => {
-          this.setState({ username: json.username });
-        });
-    }
-  }*/
-
-  /*handle_authentication = (e, data) => {
-    e.preventDefault();
-    fetch("http://localhost:8000/users/", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json"
-      },
-      body: JSON.stringify(data)
-    })
-      .then(res => res.json())
-      .then(json => {
-        localStorage.setItem("token", json.token);
-        this.setState({
-          logged_in: true,
-          displayed_form: "",
-          username: json.username
-        });
-      });
-  };
-
-  handle_logout = () => {
-    localStorage.removeItem("token");
-    this.setState({ logged_in: false, username: "" });
-  };*/
-
   render() {
     return (
       <Provider store={store}>
@@ -106,7 +67,9 @@ class App extends Component {
           )}*/}
             <Route exact path="/" component={Login} />
             <div className="container">
-              <Route exact path="/home" component={Home} />
+              <Switch>
+                <PrivateRoute exact path="/home" component={Dashboard} />
+              </Switch>
             </div>
           </div>
         </Router>
@@ -116,3 +79,5 @@ class App extends Component {
 }
 
 export default App;
+
+//<PrivateRoute exact path="/retro" component={RetroBoard} />
