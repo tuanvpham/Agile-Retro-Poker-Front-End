@@ -15,7 +15,6 @@ import PrivateRoute from "./components/common/PrivateRoute";
 import Login from "./components/Login";
 import Home from "./components/Home";
 import Dashboard from "./components/dashboard/Dashboard";
-import RetroBoard from "./components/retroboard/RetroBoard";
 import Navbar from "./components/layout/Navbar";
 
 import "./App.css";
@@ -79,5 +78,3 @@ class App extends Component {
 }
 
 export default App;
-
-//<PrivateRoute exact path="/retro" component={RetroBoard} />
