@@ -9,8 +9,6 @@ import CreatePoker from "./CreatePoker";
 import { FaRegStickyNote } from "react-icons/fa";
 import { GiCardRandom } from "react-icons/gi";
 
-import RetroBoard from "../retroboard/RetroBoard";
-
 import "./Dashboard.css";
 
 class Dashboard extends Component {
