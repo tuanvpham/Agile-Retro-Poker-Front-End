@@ -1,6 +1,11 @@
 import axios from "axios";
 
-import { GET_SESSIONS, SESSION_LOADING, GET_ERRORS } from "./types";
+import {
+  GET_SESSIONS,
+  SESSION_LOADING,
+  GET_ERRORS,
+  SET_CURRENT_SESSION
+} from "./types";
 
 // get all sessions
 export const getAllSessions = () => dispatch => {
@@ -44,3 +49,9 @@ export const setSessionLoading = () => {
 };
 
 // set current session
+export const setCurrentSession = sessionData => {
+  return {
+    type: SET_CURRENT_SESSION,
+    payload: sessionData
+  };
+};

@@ -4,8 +4,9 @@ import { withRouter } from "react-router-dom";
 import { connect } from "react-redux";
 
 import classnames from "classnames";
-import { loginUser } from "../actions/authActions";
+import { loginUser, oauthUser } from "../actions/authActions";
 import TextFieldGroup from "./common/TextFieldGroup";
+import OauthPopup from "./OauthPopup";
 
 import "./styling/Login.css";
 
@@ -15,7 +16,8 @@ class Login extends Component {
     this.state = {
       email: "",
       password: "",
-      errors: {}
+      errors: {},
+      oauth_url: ""
     };
 
     this.onChange = this.onChange.bind(this);
@@ -34,16 +36,25 @@ class Login extends Component {
     this.props.loginUser(user, this.props.history);
   }
 
+  onJiraAuth(e) {
+    const tokenData = {
+      oauth_token: localStorage.getItem("oauth_token"),
+      oauth_token_secret: localStorage.getItem("oauth_token_secret")
+    };
+
+    // passing this.props.history allows us to redirect within the login action
+    this.props.oauthUser(tokenData, this.props.history);
+  }
+
   onChange(e) {
     this.setState({ [e.target.name]: e.target.value });
   }
 
   // if user is already logged in, redirect
   componentDidMount() {
-    console.log(this.props.auth.isAuthenticated);
-    if (this.props.auth.isAuthenticated) {
-      console.log(this.props.auth.isAuthenticated);
-      console.log(this.props.auth.isAuthenticated);
+    console.log(this.props.auth.oAuth);
+    if (this.props.auth.oAuth) {
+      console.log(this.props.auth.oAuth);
       this.props.history.push("/home");
     }
   }
@@ -54,16 +65,31 @@ class Login extends Component {
     if (nextProps.errors) {
       this.setState({ errors: nextProps.errors });
     }
+
+    if (nextProps.auth.user.oauth_url) {
+      this.setState({ oauth_url: nextProps.auth.user.oauth_url });
+      console.log("oauth url set!");
+    }
   }
 
   render() {
-    if (this.props.auth.isAuthenticated) {
+    if (this.props.auth.oAuth) {
       this.props.history.push("/home");
     }
     // errors stored in the state
     // equivalent to const errors = this.state.errors;
     // destructuring allows you to pull error out of this.state
     const { errors } = this.state;
+    const { isAuthenticated, user } = this.props.auth;
+
+    const onCode = (code, params) => {
+      this.onJiraAuth();
+    };
+
+    const onClose = () => {
+      console.log("closed!");
+      console.log(user.oauth_url);
+    };
 
     return (
       <div className="login">
@@ -97,6 +123,15 @@ class Login extends Component {
               </div>
             </form>
           </div>
+          {this.state.oauth_url !== "" ? (
+            <OauthPopup
+              url={this.state.oauth_url}
+              onCode={onCode}
+              onClose={onClose}
+            />
+          ) : (
+            <div />
+          )}
         </div>
       </div>
     );
@@ -105,6 +140,7 @@ class Login extends Component {
 
 Login.propTypes = {
   loginUser: PropTypes.func.isRequired,
+  oauthUser: PropTypes.func.isRequired,
   auth: PropTypes.object.isRequired,
   errors: PropTypes.object.isRequired
 };
@@ -117,5 +153,5 @@ const mapStateToProps = state => ({
 
 export default connect(
   mapStateToProps,
-  { loginUser }
+  { loginUser, oauthUser }
 )(withRouter(Login));

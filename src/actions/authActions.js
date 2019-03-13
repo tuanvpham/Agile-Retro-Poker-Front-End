@@ -1,15 +1,17 @@
 import axios from "axios";
 import setAuthToken from "../utils/setAuthToken";
 import jwt_decode from "jwt-decode";
-import { SET_CURRENT_USER, GET_ERRORS } from "./types";
+import { SET_CURRENT_USER, GET_ERRORS, SET_LOGGED_IN } from "./types";
 
 export const loginUser = (userData, history) => dispatch => {
   axios
     .post("http://localhost:8000/users/", userData)
     .then(res => {
       // save token to local storage
-      const { token } = res.data;
+      const { token, oauth_token, oauth_token_secret, oauth_url } = res.data;
       localStorage.setItem("jwtToken", token);
+      localStorage.setItem("oauth_token", oauth_token);
+      localStorage.setItem("oauth_token_secret", oauth_token_secret);
 
       // set token to authorization header
       setAuthToken(token);
@@ -19,10 +21,38 @@ export const loginUser = (userData, history) => dispatch => {
       //const decoded = jwt_decode(token);
       const user = {
         email: res.data.email,
-        username: res.data.username
+        username: res.data.username,
+        oauth_url: oauth_url
       };
       //dispatch(setCurrentUser(decoded));
       dispatch(setCurrentUser(user));
+
+      // redirect to dashboard
+      //history.push("/home");
+    })
+    .catch(err =>
+      dispatch({
+        type: GET_ERRORS,
+        payload: err.response.data
+      })
+    );
+  //.catch(err => console.log(err.response.data));
+};
+
+export const oauthUser = (tokenData, history) => dispatch => {
+  axios
+    .post("http://localhost:8000/oauth_user/", tokenData)
+    .then(res => {
+      const { access_token, secret_access_token } = res.data;
+
+      localStorage.setItem("access_token", access_token);
+      localStorage.setItem("secret_access_token", secret_access_token);
+
+      const dummy = {
+        logged: "yes"
+      };
+
+      dispatch(setLoggedIn(dummy));
 
       // redirect to dashboard
       history.push("/home");
@@ -33,7 +63,6 @@ export const loginUser = (userData, history) => dispatch => {
         payload: err.response.data
       })
     );
-  //.catch(err => console.log(err.response.data));
 };
 
 // set logged in user
@@ -45,14 +74,28 @@ export const setCurrentUser = decoded => {
   };
 };
 
+// for after oauth
+export const setLoggedIn = dummy => {
+  // dispatch to reducer
+  return {
+    type: SET_LOGGED_IN,
+    payload: dummy
+  };
+};
+
 // log out user
 export const logoutUser = () => dispatch => {
   // remove token and auth header
   localStorage.removeItem("jwtToken");
+  localStorage.removeItem("oauth_token");
+  localStorage.removeItem("oauth_token_secret");
+  localStorage.removeItem("access_token");
+  localStorage.removeItem("secret_access_token");
   setAuthToken(false);
 
   // set current user to empty object
   dispatch(setCurrentUser({}));
+  dispatch(setLoggedIn({}));
 
   // redirect
   window.location.href = "/";

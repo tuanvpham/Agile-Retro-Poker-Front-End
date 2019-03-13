@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
 import setAuthToken from "./utils/setAuthToken";
-import { setCurrentUser, logoutUser } from "./actions/authActions";
+import { setCurrentUser, logoutUser, setLoggedIn } from "./actions/authActions";
 import axios from "axios";
 import jwt_decode from "jwt-decode";
 
@@ -16,6 +16,7 @@ import Login from "./components/Login";
 import Home from "./components/Home";
 import Dashboard from "./components/dashboard/Dashboard";
 import Navbar from "./components/layout/Navbar";
+import RetroBoard from "./components/retroboard/RetroBoard";
 
 import "./App.css";
 
@@ -37,6 +38,7 @@ if (localStorage.jwtToken) {
         username: res.data.username
       };
       store.dispatch(setCurrentUser(user));
+      store.dispatch(setLoggedIn(user));
     })
     .catch(err => console.log(err.response));
 
@@ -51,23 +53,18 @@ if (localStorage.jwtToken) {
 
 class App extends Component {
   render() {
+    console.log(store.getState().auth.oAuth);
+
     return (
       <Provider store={store}>
         <Router>
           <div>
             <Navbar />
-            {/*{this.state.logged_in ? (
-            <Home
-              handle_logout={this.handle_logout}
-              username={this.state.username}
-            />
-          ) : (
-            <Login handle_authentication={this.handle_authentication} />
-          )}*/}
             <Route exact path="/" component={Login} />
             <div className="container">
               <Switch>
-                <PrivateRoute exact path="/home" component={Dashboard} />
+                <Route exact path="/home" component={Dashboard} />
+                <PrivateRoute exact path="/retro" component={RetroBoard} />
               </Switch>
             </div>
           </div>
@@ -78,3 +75,11 @@ class App extends Component {
 }
 
 export default App;
+
+/*
+{store.getState().auth.oAuth ? (
+              <Route exact path="/" component={Login} />
+            ) : (
+              <Route exact path="/home" component={Dashboard} />
+            )}
+            */

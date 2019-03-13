@@ -13,3 +13,41 @@
   margin-bottom: 50px;
   margin-top: 20px;
 }
+
+.joinbutton {
+  background-color: #136ca6;
+  border: none;
+  color: white;
+  padding: 8px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 14px;
+  width: 70px;
+  border-radius: 14px;
+  vertical-align: middle !important;
+}
+
+.createbutton {
+  margin-left: 10px;
+  margin-right: 10px;
+  min-width: 200px;
+}
+
+.centeredtext {
+  vertical-align: middle !important;
+}
+
+.greytext {
+  color: #7e7e7e;
+}
+
+.display-4 {
+  font-weight: 400;
+}
+
+.bigwrapper {
+  border-radius: 14px;
+  background-color: white;
+  padding-top: 10px;
+}

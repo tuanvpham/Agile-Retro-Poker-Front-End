@@ -1,4 +1,8 @@
-import { GET_SESSIONS, SESSION_LOADING } from "../actions/types";
+import {
+  GET_SESSIONS,
+  SESSION_LOADING,
+  SET_CURRENT_SESSION
+} from "../actions/types";
 
 const initialState = {
   session: null,
@@ -18,6 +22,12 @@ export default function(state = initialState, action) {
         ...state,
         sessions: action.payload,
         loading: false
+      };
+    case SET_CURRENT_SESSION:
+      console.log("hi");
+      return {
+        ...state,
+        session: action.payload
       };
     default:
       return state;

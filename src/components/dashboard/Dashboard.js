@@ -2,7 +2,11 @@ import React, { Component } from "react";
 import { Modal, Button, Table } from "react-bootstrap";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
-import { getAllSessions, createSession } from "../../actions/sessionActions";
+import {
+  getAllSessions,
+  createSession,
+  setCurrentSession
+} from "../../actions/sessionActions";
 import Spinner from "../common/Spinner";
 import CreateRetro from "./CreateRetro";
 import CreatePoker from "./CreatePoker";
@@ -45,8 +49,10 @@ class Dashboard extends Component {
     //console.log(this.retroShow);
   };
 
-  startRetro = () => {
+  startRetro = sessionInfo => {
     console.log("going to retro session");
+    console.log(sessionInfo);
+    this.props.setCurrentSession(sessionInfo);
     this.props.history.push("/retro");
   };
 
@@ -63,10 +69,10 @@ class Dashboard extends Component {
       // check if there are any sessions
       if (Object.keys(sessions).length > 0) {
         dashboardContent = (
-          <div>
+          <div className="bigwrapper">
             <Table striped hover>
               <thead>
-                <tr>
+                <tr className="greytext">
                   <th />
                   <th>SESSION NAME</th>
                   <th>HOST</th>
@@ -76,7 +82,7 @@ class Dashboard extends Component {
               <tbody>
                 {[...sessions].reverse().map((session, i) => {
                   return (
-                    <tr key={i}>
+                    <tr key={i} className="centeredtext">
                       {session.session_type === "R" ? (
                         <td>
                           <FaRegStickyNote size={30} />
@@ -87,14 +93,26 @@ class Dashboard extends Component {
                         </td>
                       )}
 
-                      <td>{session.title}</td>
-                      <td>{session.owner_username}</td>
+                      <td className="centeredtext">{session.title}</td>
+                      <td className="centeredtext">{session.owner_username}</td>
                       {session.session_type === "R" ? (
-                        <td>Retrospective Board</td>
+                        <td className="centeredtext">Retrospective Board</td>
                       ) : (
-                        <td>Planning Poker</td>
+                        <td className="centeredtext">Planning Poker</td>
                       )}
-                      <td>join</td>
+
+                      {session.session_type === "R" ? (
+                        <td>
+                          <button
+                            className="joinbutton"
+                            onClick={() => this.startRetro(session)}
+                          >
+                            JOIN
+                          </button>
+                        </td>
+                      ) : (
+                        <td>:-)</td>
+                      )}
                     </tr>
                   );
                 })}
@@ -110,7 +128,7 @@ class Dashboard extends Component {
 
     return (
       <div className="dashboard">
-        <div className="container">
+        <div>
           <div className="row">
             <div className="col-md-12">
               <h1 className="display-4">Dashboard</h1>
@@ -118,6 +136,7 @@ class Dashboard extends Component {
                 <div className="buttonContainer">
                   <Button
                     variant="primary"
+                    className="createbutton"
                     onClick={() => this.setState({ retroShow: true })}
                   >
                     <FaRegStickyNote size={50} />
@@ -133,6 +152,7 @@ class Dashboard extends Component {
 
                   <Button
                     variant="primary"
+                    className="createbutton"
                     onClick={() => this.setState({ pokerShow: true })}
                   >
                     <GiCardRandom size={50} />
@@ -160,6 +180,7 @@ class Dashboard extends Component {
 Dashboard.propTypes = {
   getAllSessions: PropTypes.func.isRequired,
   createSession: PropTypes.func.isRequired,
+  setCurrentSession: PropTypes.func.isRequired,
   auth: PropTypes.object.isRequired,
   session: PropTypes.object.isRequired
 };
@@ -172,7 +193,7 @@ const mapStateToProps = state => ({
 
 export default connect(
   mapStateToProps,
-  { getAllSessions, createSession }
+  { getAllSessions, createSession, setCurrentSession }
 )(Dashboard);
 
 //<Button onClick={() => this.startRetro()}>go to retro</Button>
