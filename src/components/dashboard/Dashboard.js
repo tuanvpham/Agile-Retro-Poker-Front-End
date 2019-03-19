@@ -39,13 +39,15 @@ class Dashboard extends Component {
     const session = {
       title: title,
       description: description,
-      session_type: sessiontype
+      session_type: sessiontype,
+      username: this.props.auth.user.username
     };
 
     this.props.createSession(session);
-    this.props.getAllSessions();
 
     this.setState({ retroShow: false, pokerShow: false });
+
+    this.props.getAllSessions();
     //console.log(this.retroShow);
   };
 

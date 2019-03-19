@@ -9,7 +9,7 @@ class CreatePoker extends Component {
     this.state = {
       title: "",
       description: "",
-      sessiontype: "P",
+      sessiontype: "poker",
       errors: {}
     };
 
