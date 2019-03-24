@@ -5,23 +5,17 @@ import { SET_CURRENT_USER, GET_ERRORS, SET_LOGGED_IN } from "./types";
 
 export const loginUser = (userData, history) => dispatch => {
   axios
-    .post("http://localhost:8000/users/", userData)
+    .get("http://localhost:8000/login/")
     .then(res => {
       // save token to local storage
-      const { token, oauth_token, oauth_token_secret, oauth_url } = res.data;
-      localStorage.setItem("jwtToken", token);
+      const { oauth_token, oauth_token_secret, oauth_url } = res.data;
       localStorage.setItem("oauth_token", oauth_token);
       localStorage.setItem("oauth_token_secret", oauth_token_secret);
-
-      // set token to authorization header
-      setAuthToken(token);
 
       // set current user in redux
       // decode token to get user data
       //const decoded = jwt_decode(token);
       const user = {
-        email: res.data.email,
-        username: res.data.username,
         oauth_url: oauth_url
       };
       //dispatch(setCurrentUser(decoded));
@@ -43,10 +37,24 @@ export const oauthUser = (tokenData, history) => dispatch => {
   axios
     .post("http://localhost:8000/oauth_user/", tokenData)
     .then(res => {
-      const { access_token, secret_access_token } = res.data;
+      const { token, access_token, secret_access_token } = res.data;
 
+      localStorage.setItem("jwtToken", token);
       localStorage.setItem("access_token", access_token);
       localStorage.setItem("secret_access_token", secret_access_token);
+
+      // set token to authorization header
+      setAuthToken(token);
+
+      // set current user in redux
+      // decode token to get user data
+      //const decoded = jwt_decode(token);
+      const user = {
+        email: res.data.email,
+        username: res.data.username
+      };
+      //dispatch(setCurrentUser(decoded));
+      dispatch(setCurrentUser(user));
 
       const dummy = {
         logged: "yes"

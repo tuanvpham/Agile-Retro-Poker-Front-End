@@ -1,5 +1,12 @@
 import React, { Component } from "react";
 import { Modal, Button, Table } from "react-bootstrap";
+import Spinner from "../common/Spinner";
+import CreateRetro from "./CreateRetro";
+import CreatePoker from "./CreatePoker";
+import { FaRegStickyNote } from "react-icons/fa";
+import { GiCardRandom } from "react-icons/gi";
+
+// redux imports
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
 import {
@@ -7,11 +14,6 @@ import {
   createSession,
   setCurrentSession
 } from "../../actions/sessionActions";
-import Spinner from "../common/Spinner";
-import CreateRetro from "./CreateRetro";
-import CreatePoker from "./CreatePoker";
-import { FaRegStickyNote } from "react-icons/fa";
-import { GiCardRandom } from "react-icons/gi";
 
 import "./Dashboard.css";
 
@@ -35,7 +37,7 @@ class Dashboard extends Component {
     console.log(this.pokerShow);
   };
 
-  onSubmit = (title, description, sessiontype) => {
+  onSubmit = async (title, description, sessiontype) => {
     const session = {
       title: title,
       description: description,
@@ -43,12 +45,22 @@ class Dashboard extends Component {
       username: this.props.auth.user.username
     };
 
-    this.props.createSession(session);
+    await this.props.createSession(session);
 
     this.setState({ retroShow: false, pokerShow: false });
 
+    console.log(this.props.session.newlyCreatedSession);
+
+    /*
+    if (this.props.session.newlyCreatedSession.session_type === "P") {
+      this.setState({ storySelectShow: true });
+    } */
+
     this.props.getAllSessions();
-    //console.log(this.retroShow);
+  };
+
+  storySelectSubmit = () => {
+    console.log("submitting selected stories");
   };
 
   startRetro = sessionInfo => {
@@ -166,6 +178,12 @@ class Dashboard extends Component {
                     show={this.state.pokerShow}
                     onHide={this.pokerClose}
                     onSubmit={this.onSubmit}
+                  />
+
+                  <CreatePoker
+                    show={this.state.storySelectShow}
+                    onHide={this.storySelectClose}
+                    onSubmit={this.storySelectSubmit}
                   />
                 </div>
               </div>

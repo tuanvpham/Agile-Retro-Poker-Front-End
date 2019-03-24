@@ -9,7 +9,7 @@ class CreateRetro extends Component {
     this.state = {
       title: "",
       description: "",
-      sessiontype: "R",
+      sessiontype: "retro",
       errors: {}
     };
 

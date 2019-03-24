@@ -1,13 +1,18 @@
 import {
   GET_SESSIONS,
   SESSION_LOADING,
-  SET_CURRENT_SESSION
+  SET_CURRENT_SESSION,
+  STORY_SELECT,
+  SET_NEWLY_CREATED_SESSION,
+  GET_SESSION_STORIES
 } from "../actions/types";
 
 const initialState = {
   session: null,
   sessions: null,
-  loading: false
+  loading: false,
+  sessionStories: null,
+  newlyCreatedSession: null
 };
 
 export default function(state = initialState, action) {
@@ -24,10 +29,24 @@ export default function(state = initialState, action) {
         loading: false
       };
     case SET_CURRENT_SESSION:
-      console.log("hi");
       return {
         ...state,
         session: action.payload
+      };
+    case STORY_SELECT:
+      return {
+        ...state,
+        sessionStories: action.payload
+      };
+    case SET_NEWLY_CREATED_SESSION:
+      return {
+        ...state,
+        newlyCreatedSession: action.payload
+      };
+    case GET_SESSION_STORIES:
+      return {
+        ...state,
+        sessionStories: action.payload
       };
     default:
       return state;

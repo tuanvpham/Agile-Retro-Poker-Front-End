@@ -3,6 +3,11 @@ import { Modal, Button } from "react-bootstrap";
 
 import TextFieldGroup from "../common/TextFieldGroup";
 
+// redux imports
+import PropTypes from "prop-types";
+import { connect } from "react-redux";
+import { fetchStories } from "../../actions/sessionActions";
+
 class CreatePoker extends Component {
   constructor() {
     super();
@@ -14,6 +19,10 @@ class CreatePoker extends Component {
     };
 
     this.onChange = this.onChange.bind(this);
+  }
+
+  componentDidMount() {
+    this.props.fetchStories();
   }
 
   onChange(e) {
@@ -77,4 +86,16 @@ class CreatePoker extends Component {
   }
 }
 
-export default CreatePoker;
+CreatePoker.propTypes = {
+  fetchStories: PropTypes.func.isRequired,
+  session: PropTypes.object.isRequired
+};
+
+const mapStateToProps = state => ({
+  session: state.session
+});
+
+export default connect(
+  mapStateToProps,
+  { fetchStories }
+)(CreatePoker);

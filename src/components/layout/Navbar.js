@@ -14,7 +14,7 @@ class Navbar extends Component {
 
   render() {
     // find out if the user is logged in to determine what to show on navbar
-    const { isAuthenticated, user } = this.props.auth;
+    const { oAuth, user } = this.props.auth;
 
     const authLink = (
       <li className="nav-item dropdown">
@@ -57,7 +57,7 @@ class Navbar extends Component {
 
           <div className="collapse navbar-collapse" id="mobile-nav">
             <ul className="navbar-nav ml-auto navbar-right">
-              {isAuthenticated ? authLink : ""}
+              {oAuth ? authLink : ""}
             </ul>
           </div>
         </div>

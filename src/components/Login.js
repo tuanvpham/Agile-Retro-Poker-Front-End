@@ -96,24 +96,6 @@ class Login extends Component {
         <div className="wrapper">
           <div id="formContent">
             <form onSubmit={this.onSubmit}>
-              <TextFieldGroup
-                placeholder="Email Address"
-                name="email"
-                type="text"
-                value={this.state.email}
-                onChange={this.onChange}
-                error={errors.message}
-              />
-
-              <TextFieldGroup
-                placeholder="Password"
-                name="password"
-                type="password"
-                value={this.state.password}
-                onChange={this.onChange}
-                error={errors.message}
-              />
-
               <div id="formFooter">
                 <input
                   type="submit"
