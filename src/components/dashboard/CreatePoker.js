@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { Modal, Button } from "react-bootstrap";
+import { Modal, Button, Checkbox } from "react-bootstrap";
 
 import TextFieldGroup from "../common/TextFieldGroup";
 
@@ -7,6 +7,7 @@ import TextFieldGroup from "../common/TextFieldGroup";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
 import { fetchStories } from "../../actions/sessionActions";
+import update from "immutability-helper";
 
 class CreatePoker extends Component {
   constructor() {
@@ -16,7 +17,8 @@ class CreatePoker extends Component {
       description: "",
       sessiontype: "poker",
       errors: {},
-      sessionCreated: false
+      sessionCreated: false,
+      storySelection: []
     };
 
     this.onChange = this.onChange.bind(this);
@@ -30,13 +32,56 @@ class CreatePoker extends Component {
     this.setState({ [e.target.name]: e.target.value });
   }
 
-  chooseStoriesButton = () => {
-    this.props.onSubmit(
+  chooseStoriesButton = async () => {
+    await this.props.onSubmit(
       this.state.title,
       this.state.description,
       this.state.sessiontype
     );
-    this.setState({ sessionCreated: true });
+    //this.setState({ sessionCreated: true });
+  };
+
+  componentWillReceiveProps(nextProps) {
+    if (nextProps.session.sessionStories !== null) {
+      const stories = Array.from(nextProps.session.sessionStories);
+      stories.forEach(story => {
+        story.selected = false;
+        /*this.setState({
+          stories: [...this.state.stories, story]
+        });*/
+      });
+
+      console.log("stories temp array:");
+      console.log(stories);
+
+      this.setState({
+        sessionCreated: true,
+        storySelection: stories
+      });
+
+      /*this.setState({
+        sessionCreated: true,
+        storySelection: Array.from(nextProps.session.sessionStories)
+      });
+
+      this.state.storySelection.forEach(story =>
+        this.setState({
+          storySelection: update(this.state.storySelection, {
+            [story]: { selected: { $set: false } }
+          })
+        })
+      );*/
+      console.log(this.state.storySelection);
+    }
+  }
+
+  onCheck = itemNum => {
+    console.log(itemNum);
+    this.setState({
+      storySelection: update(this.state.storySelection, {
+        [itemNum]: { selected: { $set: true } }
+      })
+    });
   };
 
   render() {
@@ -77,12 +122,33 @@ class CreatePoker extends Component {
               </form>
             </div>
           ) : (
-            <div />
+            <div>
+              <center>Select JIRA stories:</center>
+              {this.state.storySelection.map((story, i) => (
+                <div
+                  key={i}
+                  style={{ paddingLeft: "20px", paddingRight: "20px" }}
+                >
+                  <label>
+                    <button key={i} id={i} onClick={() => this.onCheck(i)}>
+                      ✓{" "}
+                    </button>
+                    {story.title}
+                  </label>
+                </div>
+              ))}
+            </div>
           )}
         </Modal.Body>
         <Modal.Footer>
           {this.state.sessionCreated ? (
-            <Button>Create Session</Button>
+            <Button
+              onClick={() =>
+                this.props.onStorySelect(this.state.storySelection)
+              }
+            >
+              Create Session
+            </Button>
           ) : (
             <div>
               <Button

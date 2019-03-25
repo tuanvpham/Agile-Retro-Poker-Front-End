@@ -194,8 +194,7 @@ class RetroBoard extends Component {
     this.props.history.push("/home");
   };
 
-  editItem = (e, item, i) => {
-    var entered_text = "Text Changing";
+  editItem = (e, item, i, entered_text) => {
     var item_state = {
       itemText: item.item_text,
       itemType: item.item_type,
@@ -362,6 +361,7 @@ function RetroBoardItemList(props) {
   const sessionTitle = props.sessionTitle;
   const username = props.username;
   const email = props.email;
+  var entered_text = "ok";
   const items =
     itemList.length > 0 ? (
       itemList.map((item, i) =>
@@ -389,7 +389,7 @@ function RetroBoardItemList(props) {
                 >
                   <IconButton
                     aria-label="edit"
-                    onClick={e => editItem(e, item, i)}
+                    onClick={e => editItem(e, item, i, entered_text)}
                     style={{ padding: "0px" }}
                   >
                     <FaEdit />

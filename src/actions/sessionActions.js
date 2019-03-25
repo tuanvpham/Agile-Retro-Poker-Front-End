@@ -106,3 +106,9 @@ export const fetchSessionStories = sessionID => dispatch => {
     })
   );
 };
+
+export const chooseStories = stories => dispatch => {
+  axios.post("http://localhost:8000/remove_stories/", stories).then(res => {
+    console.log(res);
+  });
+};

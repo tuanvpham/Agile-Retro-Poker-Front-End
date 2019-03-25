@@ -12,7 +12,8 @@ import { connect } from "react-redux";
 import {
   getAllSessions,
   createSession,
-  setCurrentSession
+  setCurrentSession,
+  chooseStories
 } from "../../actions/sessionActions";
 
 import "./Dashboard.css";
@@ -42,11 +43,11 @@ class Dashboard extends Component {
       title: title,
       description: description,
       session_type: sessiontype,
-      username: this.props.auth.user.username
+      email: this.props.auth.user.email
     };
 
     console.log(sessiontype);
-    this.props.createSession(session);
+    await this.props.createSession(session);
 
     if (sessiontype == "retro") {
       this.setState({ retroShow: false });
@@ -54,10 +55,14 @@ class Dashboard extends Component {
     }
   };
 
-  onStorySelect = () => {};
-
-  storySelectSubmit = () => {
+  onStorySelect = async stories => {
+    console.log(stories);
     console.log("submitting selected stories");
+
+    await this.props.chooseStories(stories);
+
+    this.setState({ pokerShow: false });
+    this.props.getAllSessions();
   };
 
   startRetro = sessionInfo => {
@@ -175,16 +180,10 @@ class Dashboard extends Component {
                     show={this.state.pokerShow}
                     onHide={this.pokerClose}
                     onSubmit={this.onSubmit}
-                  />
-
-                  <CreatePoker
-                    show={this.state.storySelectShow}
-                    onHide={this.storySelectClose}
-                    onSubmit={this.storySelectSubmit}
+                    onStorySelect={this.onStorySelect}
                   />
                 </div>
               </div>
-
               {dashboardContent}
             </div>
           </div>
@@ -198,6 +197,7 @@ Dashboard.propTypes = {
   getAllSessions: PropTypes.func.isRequired,
   createSession: PropTypes.func.isRequired,
   setCurrentSession: PropTypes.func.isRequired,
+  chooseStories: PropTypes.func.isRequired,
   auth: PropTypes.object.isRequired,
   session: PropTypes.object.isRequired
 };
@@ -210,7 +210,7 @@ const mapStateToProps = state => ({
 
 export default connect(
   mapStateToProps,
-  { getAllSessions, createSession, setCurrentSession }
+  { getAllSessions, createSession, setCurrentSession, chooseStories }
 )(Dashboard);
 
 //<Button onClick={() => this.startRetro()}>go to retro</Button>
