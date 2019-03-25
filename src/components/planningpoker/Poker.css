@@ -1,0 +1,341 @@
+* {
+  box-sizing: border-box;
+}
+
+/* Create three equal columns that floats next to each other */
+.column {
+  float: left;
+  width: 33.33%;
+  padding: 10px;
+  border: 2px solid grey;
+}
+
+/* Clear floats after the columns */
+.row:after {
+  content: "";
+  display: table;
+  clear: both;
+}
+
+.popup {
+  position: fixed;
+  width: 100%;
+  height: 100%;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  margin: auto;
+  background-color: rgba(0, 0, 0, 0.5);
+}
+.popup_inner {
+  position: absolute;
+  left: 25%;
+  right: 25%;
+  top: 25%;
+  bottom: 25%;
+  margin: auto;
+  background: white;
+}
+
+/* players card style */
+.card-rig {
+  width: 100px;
+  text-align: center;
+}
+.card-rig .perspective-wrapper {
+  perspective: 700px;
+  perspective-origin: 50% 50%;
+}
+.card-rig .animation-wrapper {
+  will-change: transform;
+}
+.card-rig.card-in-deck {
+  height: 140px;
+}
+.player-area .card-rig {
+  display: -ms-flexbox;
+  display: flex;
+  -ms-flex-flow: row;
+  flex-flow: row;
+  -ms-flex-align: center;
+  align-items: center;
+  width: 150px;
+}
+.player-area .card-rig .perspective-wrapper {
+  transform: scale(0.5);
+  transform-origin: top left;
+  position: relative; /* size needs to be set to match the scale result */
+  width: 50px;
+  height: 70px;
+}
+.player-area .card-rig .label-name {
+  text-align: left;
+  white-space: normal;
+  margin: 0 0 0 10px;
+  font-size: 13px;
+  line-height: 16px;
+  -ms-flex: 0 1 100%;
+  flex: 0 1 100%; /* Leave enough room for italics */
+}
+.card-placement {
+  height: 70px;
+  margin-bottom: 8px;
+  margin-right: 15px;
+  display: inline-block;
+}
+/* Play Area Card Styles */
+.empty-card .card-back {
+  border: 1px dashed rgb(240, 243, 245);
+  background-color: #f8f8f8;
+  margin: 1px;
+}
+.card-in-play {
+  cursor: default;
+}
+.card-in-play .card-back {
+  background-color: #656565;
+  border: 2px solid #494949;
+}
+.card-in-play .card-face {
+  color: white;
+  background-image: none;
+}
+.card-in-play.card-flipped .card-container {
+  transform: rotateY(180deg);
+}
+.card-historic .label-name {
+  color: #787878;
+  font-style: italic;
+}
+.card-wrapper {
+  position: relative;
+  width: 100px;
+  height: 140px;
+  z-index: 1;
+}
+.card-container {
+  width: 100px;
+  height: 140px;
+  border-radius: 10px;
+}
+.card {
+  border-radius: 10px;
+  margin: 0 auto;
+  width: 100px;
+  height: 140px;
+  position: absolute;
+  top: 0;
+  left: 0;
+  background-repeat: no-repeat;
+  background-position: 50% 50%;
+  font-family: $ff-noto;
+  font-weight: bold;
+  color: white;
+  transform: scale(1);
+  transition: transform 100ms ease-in-out;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+}
+.card svg {
+  display: block;
+  width: 50px;
+  height: 50px;
+  margin: 0 auto;
+}
+.card:hover {
+  /* cursor: pointer; */
+}
+.card-green .card-face {
+  background-color: #149c37;
+  border: 2px solid rgb(43, 166, 75);
+}
+.card-blue .card-face {
+  background-color: #0466d2;
+  border: 2px solid rgb(4, 92, 189);
+}
+.card-orange .card-face {
+  background-color: #fb8800;
+  border: 2px solid rgb(226, 122, 0);
+}
+.card-drk-grey .card-face {
+  background-color: #2d2d2d;
+  border: 2px solid rgb(66, 66, 66);
+}
+.card-drk-grey .card-face .player-vote {
+  font-size: 37px;
+}
+.card-grey .card-face {
+  background-color: #656565;
+  border: 2px solid rgb(207, 212, 215);
+}
+.card-yellow .card-face {
+  background-color: #fdc72f;
+  border: 2px solid rgb(228, 179, 42);
+}
+.card-light-grey .card-face {
+  background-color: #f7f7f7;
+  border: 2px solid rgb(222, 222, 222);
+  color: #a0a0a0;
+}
+.card-light-grey .card-face .player-vote {
+  font-size: 35px;
+}
+.card-light-grey .card-face .small-card-id {
+  font-size: 15px;
+}
+.card-face .player-vote {
+  position: relative;
+  padding-top: 40px;
+  font-size: 45px;
+}
+/* The Player's Own Card Deck Styles */
+.players-cards-container {
+  height: 120px;
+  min-height: 120px;
+  padding: 15px 0 0;
+  border-top: 1px solid #e6ebef;
+  z-index: 2;
+}
+.spectator-toggle {
+  position: relative;
+  top: -30px;
+  margin: 0 30px 0 0;
+  float: right;
+  background-color: white;
+}
+.spectator-toggle .btn-toggle {
+  display: block;
+  float: left;
+  margin: 0;
+  padding: 5px 10px;
+  font-weight: 100;
+  font-size: 14px;
+  line-height: 1;
+  color: #999;
+  border: 1px solid #aaa;
+  cursor: pointer;
+}
+.spectator-toggle .btn-toggle:hover,
+.spectator-toggle .btn-toggle:focus {
+  background-color: #fedad0;
+}
+.spectator-toggle .btn-toggle-active {
+  background-color: #f88333;
+  color: white;
+}
+.spectator-toggle .btn-toggle-active:hover,
+.spectator-toggle .btn-toggle-active:focus {
+  background-color: #f88333;
+  cursor: default;
+}
+.spectator-toggle .toggle-left {
+  border-top-left-radius: 3px;
+  border-bottom-left-radius: 3px;
+  border-right: none;
+}
+.spectator-toggle .toggle-right {
+  border-top-right-radius: 3px;
+  border-bottom-right-radius: 3px;
+  border-left: none;
+}
+.small-card-id {
+  position: absolute;
+  top: 3px;
+  left: 6px;
+  font-size: 20px;
+}
+.small-card-id svg {
+  width: 22px;
+  height: 22px;
+}
+.player-cards-wrapper {
+  position: relative;
+}
+.card-in-hand {
+  position: absolute;
+  left: 0;
+  cursor: pointer;
+  z-index: 1;
+}
+.card-in-hand .card-container {
+  transition: transform 0.3s ease;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+}
+.card-in-hand.card-flipped .animation-wrapper {
+  transform: rotateY(180deg);
+}
+.card-in-hand:hover .card-container,
+.card-in-hand.selected .card-container {
+  transform: scale(1.2);
+  box-shadow: 0 0 30px rgba(0, 0, 0, 0.5);
+}
+@media (min-width: 769px) {
+  .card-in-hand {
+  }
+  .card-in-hand.selected {
+    z-index: 99;
+  }
+}
+/* Animation Styles */
+.all-players-cards-selected {
+  -ms-flex: 1 auto;
+  flex: 1 auto;
+  padding: 15px;
+  padding-bottom: 30px;
+  overflow-y: auto;
+}
+.all-players-cards-selected .perspective-wrapper {
+  perspective: 1000px;
+}
+.all-players-cards-selected .perspective-wrapper .card-container {
+}
+.all-players-cards-selected
+  .perspective-wrapper
+  .card-container.face-down
+  .card {
+  -webkit-backface-visibility: hidden;
+  backface-visibility: hidden;
+}
+.all-players-cards-selected
+  .perspective-wrapper
+  .card-container.face-up
+  .card-back {
+  z-index: 0;
+}
+.all-players-cards-selected
+  .perspective-wrapper
+  .card-container.face-down
+  .card-back {
+  z-index: 1000;
+}
+.all-players-cards-selected .card-face {
+  transform: rotateY(180deg);
+}
+
+.game-footer {
+  border-top: 5px solid #494949;
+  color: white;
+  line-height: 20px;
+  font-size: 11px;
+  background-color: #656565;
+  position: absolute;
+  bottom: 0;
+  width: 100%;
+  padding: 2px 15px;
+  z-index: 1000;
+}
+.game-footer a {
+  color: white;
+}
+.game-footer .footer-links {
+  text-align: right;
+  font-size: 11px;
+}
+.game-footer .link-352 {
+  margin-left: 3px;
+  margin-top: 1px;
+  display: inline-block;
+}

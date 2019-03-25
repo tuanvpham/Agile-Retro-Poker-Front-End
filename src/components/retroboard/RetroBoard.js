@@ -10,6 +10,7 @@ import CardActions from "@material-ui/core/CardActions";
 import IconButton from "@material-ui/core/IconButton";
 import { FaEdit, FaTrash } from "react-icons/fa";
 import Typography from "@material-ui/core/Typography";
+import { MdAdd } from "react-icons/md";
 
 import { slide as Menu } from "react-burger-menu";
 
@@ -33,7 +34,10 @@ class RetroBoard extends Component {
       whatWentWellItems: [],
       whatDidNotItems: [],
       actionItems: [],
-      sessionId: this.props.session.session.id
+      sessionId: this.props.session.session.id,
+      wwwAddShow: true,
+      wdAddShow: false,
+      actionAddShow: false
     };
     this.socket = new WebSocket(
       "ws://localhost:8000/retro/" +
@@ -247,6 +251,7 @@ class RetroBoard extends Component {
   };
 
   render() {
+    console.log(this.state.wwwAddShow);
     return (
       <div>
         <h1>Retrospective Board {this.state.sessionName}</h1>
@@ -267,10 +272,17 @@ class RetroBoard extends Component {
                 >
                   What Went Well
                 </Typography>
-                <RetroBoardForm
-                  submitText={this.submitText}
-                  itemType={"what_went_well"}
-                />
+                {this.state.wwwAddShow ? (
+                  <RetroBoardForm
+                    submitText={this.submitText}
+                    itemType={"what_went_well"}
+                  />
+                ) : (
+                  <IconButton>
+                    <MdAdd />
+                  </IconButton>
+                )}
+
                 <RetroBoardItemList
                   itemList={this.state.whatWentWellItems}
                   username={this.props.auth.user.username}

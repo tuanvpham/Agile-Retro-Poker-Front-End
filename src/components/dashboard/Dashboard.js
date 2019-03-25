@@ -13,7 +13,8 @@ import {
   getAllSessions,
   createSession,
   setCurrentSession,
-  chooseStories
+  chooseStories,
+  deleteSession
 } from "../../actions/sessionActions";
 
 import "./Dashboard.css";
@@ -26,6 +27,16 @@ class Dashboard extends Component {
 
   componentDidMount() {
     this.props.getAllSessions();
+  }
+
+  componentWillReceiveProps(nextProps) {
+    if (
+      nextProps.session.sessions !== null &&
+      this.props.session.sessions !== null &&
+      nextProps.session.sessions.length !== this.props.session.sessions.length
+    ) {
+      this.props.getAllSessions();
+    }
   }
 
   retroClose = () => {
@@ -46,30 +57,36 @@ class Dashboard extends Component {
       email: this.props.auth.user.email
     };
 
-    console.log(sessiontype);
     await this.props.createSession(session);
 
-    if (sessiontype == "retro") {
+    if (sessiontype === "retro") {
       this.setState({ retroShow: false });
       this.props.getAllSessions();
     }
   };
 
-  onStorySelect = async stories => {
-    console.log(stories);
+  onStorySelect = async ostories => {
+    const storysubmit = { stories: ostories };
     console.log("submitting selected stories");
 
-    await this.props.chooseStories(stories);
+    await this.props.chooseStories(storysubmit);
 
     this.setState({ pokerShow: false });
     this.props.getAllSessions();
   };
 
-  startRetro = sessionInfo => {
-    console.log("going to retro session");
+  startSession = sessionInfo => {
+    console.log("going to session lobby");
     console.log(sessionInfo);
     this.props.setCurrentSession(sessionInfo);
-    this.props.history.push("/retro");
+    //this.props.history.push("/retro");
+    this.props.history.push("/lobby");
+  };
+
+  onDeleteSession = async sessionid => {
+    const session = { session: sessionid };
+    await this.props.deleteSession(session);
+    this.props.getAllSessions();
   };
 
   render() {
@@ -121,13 +138,42 @@ class Dashboard extends Component {
                         <td>
                           <button
                             className="joinbutton"
-                            onClick={() => this.startRetro(session)}
+                            onClick={() => this.startSession(session)}
                           >
                             JOIN
                           </button>
+                          {session.owner_username ===
+                          this.props.auth.user.username ? (
+                            <button
+                              className="deletebutton"
+                              onClick={() => this.onDeleteSession(session.id)}
+                            >
+                              DELETE
+                            </button>
+                          ) : (
+                            ""
+                          )}
                         </td>
                       ) : (
-                        <td>:-)</td>
+                        <td>
+                          <button
+                            className="joinbutton"
+                            onClick={() => this.startSession(session)}
+                          >
+                            JOIN
+                          </button>
+                          {session.owner_username ===
+                          this.props.auth.user.username ? (
+                            <button
+                              className="deletebutton"
+                              onClick={() => this.onDeleteSession(session.id)}
+                            >
+                              DELETE
+                            </button>
+                          ) : (
+                            ""
+                          )}
+                        </td>
                       )}
                     </tr>
                   );
@@ -197,6 +243,7 @@ Dashboard.propTypes = {
   getAllSessions: PropTypes.func.isRequired,
   createSession: PropTypes.func.isRequired,
   setCurrentSession: PropTypes.func.isRequired,
+  deleteSession: PropTypes.func.isRequired,
   chooseStories: PropTypes.func.isRequired,
   auth: PropTypes.object.isRequired,
   session: PropTypes.object.isRequired
@@ -210,7 +257,13 @@ const mapStateToProps = state => ({
 
 export default connect(
   mapStateToProps,
-  { getAllSessions, createSession, setCurrentSession, chooseStories }
+  {
+    getAllSessions,
+    createSession,
+    setCurrentSession,
+    chooseStories,
+    deleteSession
+  }
 )(Dashboard);
 
 //<Button onClick={() => this.startRetro()}>go to retro</Button>

@@ -28,6 +28,20 @@
   vertical-align: middle !important;
 }
 
+.deletebutton {
+  background-color: #8b0000;
+  border: none;
+  color: white;
+  padding: 8px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 14px;
+  width: 70px;
+  border-radius: 14px;
+  vertical-align: middle !important;
+  margin-left: 15px;
+}
 .createbutton {
   margin-left: 10px;
   margin-right: 10px;

@@ -17,6 +17,8 @@ import Home from "./components/Home";
 import Dashboard from "./components/dashboard/Dashboard";
 import Navbar from "./components/layout/Navbar";
 import RetroBoard from "./components/retroboard/RetroBoard";
+import Poker from "./components/planningpoker/Poker";
+import Lobby from "./components/lobby/Lobby";
 
 import "./App.css";
 
@@ -64,7 +66,10 @@ class App extends Component {
             <div className="container">
               <Switch>
                 <Route exact path="/home" component={Dashboard} />
+
+                <PrivateRoute exact path="/lobby" component={Lobby} />
                 <PrivateRoute exact path="/retro" component={RetroBoard} />
+                <PrivateRoute exact path="/poker" component={Poker} />
               </Switch>
             </div>
           </div>

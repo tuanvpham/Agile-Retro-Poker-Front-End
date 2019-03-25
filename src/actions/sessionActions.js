@@ -112,3 +112,10 @@ export const chooseStories = stories => dispatch => {
     console.log(res);
   });
 };
+
+export const deleteSession = session => dispatch => {
+  axios.post("http://localhost:8000/delete_session/", session).then(res => {
+    console.log(session);
+    console.log(res);
+  });
+};
