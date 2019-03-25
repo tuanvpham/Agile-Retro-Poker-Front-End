@@ -24,21 +24,33 @@ class RetroBoardForm extends Component {
     });
   };
 
+  onButton = e => {
+    this.props.submitText(e, this.state);
+    this.setState({ itemText: "" });
+  };
+
   render() {
     return (
       <div>
-        <input
-          type="text"
-          name="itemText"
-          value={this.state.itemText}
-          onChange={this.handleItemTextChange}
-        />
-        <IconButton
-          aria-label="submit"
-          onClick={e => this.props.submitText(e, this.state)}
-        >
-          <MdAdd />
-        </IconButton>
+        <form onSubmit={e => this.onButton(e)} style={{ display: "flex" }}>
+          <input
+            type="text"
+            name="itemText"
+            value={this.state.itemText}
+            onChange={this.handleItemTextChange}
+          />
+          <div
+            style={{
+              height: "25px",
+              justifyContent: "center",
+              alignItems: "center"
+            }}
+          >
+            <IconButton aria-label="submit" type="submit">
+              <MdAdd />
+            </IconButton>
+          </div>
+        </form>
       </div>
     );
   }

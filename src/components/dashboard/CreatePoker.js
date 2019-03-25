@@ -15,19 +15,29 @@ class CreatePoker extends Component {
       title: "",
       description: "",
       sessiontype: "poker",
-      errors: {}
+      errors: {},
+      sessionCreated: false
     };
 
     this.onChange = this.onChange.bind(this);
   }
 
   componentDidMount() {
-    this.props.fetchStories();
+    //this.props.fetchStories();
   }
 
   onChange(e) {
     this.setState({ [e.target.name]: e.target.value });
   }
+
+  chooseStoriesButton = () => {
+    this.props.onSubmit(
+      this.state.title,
+      this.state.description,
+      this.state.sessiontype
+    );
+    this.setState({ sessionCreated: true });
+  };
 
   render() {
     return (
@@ -42,44 +52,48 @@ class CreatePoker extends Component {
           </Modal.Title>
         </Modal.Header>
         <Modal.Body>
-          <div>
-            <form onSubmit={this.onSubmit}>
-              <TextFieldGroup
-                placeholder="Session Name"
-                label="Session Name"
-                name="title"
-                type="text"
-                value={this.state.title}
-                onChange={this.onChange}
-              />
-              <p />
+          {!this.state.sessionCreated ? (
+            <div>
+              <form onSubmit={this.onSubmit}>
+                <TextFieldGroup
+                  placeholder="Session Name"
+                  label="Session Name"
+                  name="title"
+                  type="text"
+                  value={this.state.title}
+                  onChange={this.onChange}
+                />
+                <p />
 
-              <TextFieldGroup
-                placeholder="Description"
-                name="description"
-                label="Description"
-                type="text"
-                multiline="true"
-                value={this.state.description}
-                onChange={this.onChange}
-              />
-            </form>
-          </div>
+                <TextFieldGroup
+                  placeholder="Description"
+                  name="description"
+                  label="Description"
+                  type="text"
+                  multiline="true"
+                  value={this.state.description}
+                  onChange={this.onChange}
+                />
+              </form>
+            </div>
+          ) : (
+            <div />
+          )}
         </Modal.Body>
         <Modal.Footer>
-          <Button
-            variant="outline-success"
-            onClick={() =>
-              this.props.onSubmit(
-                this.state.title,
-                this.state.description,
-                this.state.sessiontype
-              )
-            }
-          >
-            Create Session
-          </Button>
-          <Button onClick={this.props.onHide}>Cancel</Button>
+          {this.state.sessionCreated ? (
+            <Button>Create Session</Button>
+          ) : (
+            <div>
+              <Button
+                variant="outline-success"
+                onClick={() => this.chooseStoriesButton()}
+              >
+                Select Stories
+              </Button>
+              <Button onClick={this.props.onHide}>Cancel</Button>
+            </div>
+          )}
         </Modal.Footer>
       </Modal>
     );

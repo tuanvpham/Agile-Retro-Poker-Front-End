@@ -27,7 +27,6 @@ class RetroBoard extends Component {
   constructor(props) {
     super(props);
     this.username = this.props.auth.user.username;
-    console.log(this.props.auth.user.email);
     this.state = {
       sessionName: this.props.session.session.title,
       isOwner: false,
@@ -57,8 +56,6 @@ class RetroBoard extends Component {
             logged_in: false
           });
         } else {
-          console.log(res);
-
           for (var key in res) {
             var retroBoardItem = res[key];
             switch (retroBoardItem.item_type) {
@@ -111,7 +108,6 @@ class RetroBoard extends Component {
 
     this.socket.onmessage = e => {
       const dataFromSocket = JSON.parse(e.data);
-      console.log(dataFromSocket.hasOwnProperty("exit_session"));
       if (dataFromSocket.hasOwnProperty("end_session_message")) {
         // We should replace alert with something else
         alert(
@@ -122,6 +118,16 @@ class RetroBoard extends Component {
         console.log("Kate, redirect user to dashboard here");
       } else if (dataFromSocket.hasOwnProperty("exit_session_message")) {
         alert(this.props.auth.user.username + " left the session");
+      } else if (dataFromSocket.hasOwnProperty("delete_item_message")) {
+        const item_id = dataFromSocket.id;
+        const item_type = dataFromSocket.item_type;
+        //this.refreshDeletedItem(item_id, item_type);
+      } else if (dataFromSocket.hasOwnProperty("edit_item_message")) {
+        const item_id = dataFromSocket.id;
+        const item_type = dataFromSocket.item_type;
+        const new_item_text = dataFromSocket.new_item_text;
+        const item_index = dataFromSocket.item_index;
+        //this.refreshEditedItem(item_id, item_type, new_item_text, item_index;
       } else {
         const retroBoardItem = dataFromSocket;
         this.addRetroBoardItems(retroBoardItem);
@@ -140,9 +146,12 @@ class RetroBoard extends Component {
     console.log(item);
     switch (item.item_type) {
       case "WWW":
+        console.log(this.state.whatWentWellItems);
+        console.log("new item");
         this.setState({
           whatWentWellItems: [...this.state.whatWentWellItems, item]
         });
+        console.log(this.state.whatWentWellItems);
         break;
       case "WDN":
         this.setState({
@@ -241,7 +250,7 @@ class RetroBoard extends Component {
   render() {
     return (
       <div>
-        <h1>Team Name - {this.state.sessionName}</h1>
+        <h1>Retrospective Board {this.state.sessionName}</h1>
         <div className="row">
           <div className="column" style={{ border: "none" }}>
             <Card
@@ -353,40 +362,65 @@ function RetroBoardItemList(props) {
   const sessionTitle = props.sessionTitle;
   const username = props.username;
   const email = props.email;
-  const items = itemList.map((item, i) =>
-    item.session_title === sessionTitle || item.session === sessionTitle ? (
-      <Card
-        key={i}
-        style={{
-          marginBottom: "20px",
-          left: "0px"
-        }}
-      >
-        <CardContent>{item.item_text}</CardContent>
-        {item.owner_username === username || item.item_owner === username ? (
-          <CardActions style={{ marginLeft: "75%" }}>
-            <IconButton
-              aria-label="edit"
-              onClick={e => editItem(e, item, i)}
-              style={{ padding: "0px" }}
-            >
-              <FaEdit />
-            </IconButton>
-            <IconButton
-              aria-label="delete"
-              onClick={e => deleteItem(e, item, i)}
-            >
-              <FaTrash />
-            </IconButton>
-          </CardActions>
+  const items =
+    itemList.length > 0 ? (
+      itemList.map((item, i) =>
+        item.session_title === sessionTitle || item.session === sessionTitle ? (
+          <Card
+            key={i}
+            style={{
+              marginBottom: "20px",
+              left: "0px",
+              width: "28.5rem",
+              borderColor: "grey",
+              background: "#F5F5F5",
+              height: "auto"
+            }}
+          >
+            <CardContent>
+              {item.item_text}
+              {item.owner_username === username ||
+              item.item_owner === username ? (
+                <div
+                  style={{
+                    alignContent: "right",
+                    float: "right"
+                  }}
+                >
+                  <IconButton
+                    aria-label="edit"
+                    onClick={e => editItem(e, item, i)}
+                    style={{ padding: "0px" }}
+                  >
+                    <FaEdit />
+                  </IconButton>
+                  <IconButton
+                    aria-label="delete"
+                    onClick={e => deleteItem(e, item, i)}
+                    style={{
+                      padding: "0px",
+                      marginLeft: "8px",
+                      marginTop: "10px",
+                      marginBottom: "10px"
+                    }}
+                  >
+                    <FaTrash />
+                  </IconButton>
+                </div>
+              ) : (
+                ""
+              )}
+            </CardContent>
+          </Card>
         ) : (
           ""
-        )}
-      </Card>
+        )
+      )
     ) : (
-      ""
-    )
-  );
+      <div style={{ marginTop: "20px", marginBottom: "10px" }}>
+        <center>Click the plus button to add an item!</center>
+      </div>
+    );
   return (
     <div
       style={{

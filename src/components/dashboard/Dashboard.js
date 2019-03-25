@@ -45,19 +45,16 @@ class Dashboard extends Component {
       username: this.props.auth.user.username
     };
 
-    await this.props.createSession(session);
+    console.log(sessiontype);
+    this.props.createSession(session);
 
-    this.setState({ retroShow: false, pokerShow: false });
-
-    console.log(this.props.session.newlyCreatedSession);
-
-    /*
-    if (this.props.session.newlyCreatedSession.session_type === "P") {
-      this.setState({ storySelectShow: true });
-    } */
-
-    this.props.getAllSessions();
+    if (sessiontype == "retro") {
+      this.setState({ retroShow: false });
+      this.props.getAllSessions();
+    }
   };
+
+  onStorySelect = () => {};
 
   storySelectSubmit = () => {
     console.log("submitting selected stories");
