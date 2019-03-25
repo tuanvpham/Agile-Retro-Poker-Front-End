@@ -51,8 +51,10 @@ export const createSession = sessionData => dispatch => {
         };
 
         dispatch(fetchStories(fetchStoryData));
+      } else {
+        dispatch(getAllSessions());
       }
-    }) // here you should call the get all poker stories function w/ this session res.data
+    })
     .catch(err =>
       dispatch({
         type: GET_ERRORS,
@@ -117,5 +119,6 @@ export const deleteSession = session => dispatch => {
   axios.post("http://localhost:8000/delete_session/", session).then(res => {
     console.log(session);
     console.log(res);
+    dispatch(getAllSessions());
   });
 };

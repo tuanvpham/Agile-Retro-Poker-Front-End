@@ -61,7 +61,7 @@ class Dashboard extends Component {
 
     if (sessiontype === "retro") {
       this.setState({ retroShow: false });
-      this.props.getAllSessions();
+      //this.props.getAllSessions();
     }
   };
 
@@ -86,13 +86,12 @@ class Dashboard extends Component {
   onDeleteSession = async sessionid => {
     const session = { session: sessionid };
     await this.props.deleteSession(session);
-    this.props.getAllSessions();
+    //this.props.getAllSessions();
   };
 
   render() {
     const { user } = this.props.auth;
     const { sessions, loading } = this.props.session;
-    console.log(sessions);
 
     let dashboardContent;
 
@@ -139,6 +138,7 @@ class Dashboard extends Component {
                           <button
                             className="joinbutton"
                             onClick={() => this.startSession(session)}
+                            style={{ marginLeft: "40px" }}
                           >
                             JOIN
                           </button>
@@ -159,6 +159,7 @@ class Dashboard extends Component {
                           <button
                             className="joinbutton"
                             onClick={() => this.startSession(session)}
+                            style={{ marginLeft: "40px" }}
                           >
                             JOIN
                           </button>

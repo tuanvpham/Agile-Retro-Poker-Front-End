@@ -388,6 +388,9 @@ class Poker extends Component {
         secret_access_token: localStorage.getItem("secret_access_token")
       })
     });
+
+    // redirect to dashboard
+    this.props.history.push("/home");
   };
 
   endGame = () => {
