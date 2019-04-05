@@ -32,8 +32,11 @@ class Dashboard extends Component {
 
     this.socket.onmessage = e => {
       const dataFromSocket = JSON.parse(e.data);
-      if (dataFromSocket.hasOwnProperty("create_session")) {
-        console.log("newone");
+      if (dataFromSocket.hasOwnProperty("create_session_kate")) {
+        this.props.getAllSessions();
+      } else if (dataFromSocket.hasOwnProperty("delete_session_kate")) {
+        this.props.getAllSessions();
+      } else if (dataFromSocket.hasOwnProperty("create_session")) {
         this.props.getAllSessions();
       } else if (dataFromSocket.hasOwnProperty("delete_session")) {
         this.props.getAllSessions();
@@ -76,7 +79,7 @@ class Dashboard extends Component {
       //this.props.getAllSessions();
       this.socket.send(
         JSON.stringify({
-          create_session: "create_session"
+          create_session_kate: "create_session_kate"
         })
       );
     }
@@ -91,7 +94,7 @@ class Dashboard extends Component {
     this.setState({ pokerShow: false });
     this.socket.send(
       JSON.stringify({
-        create_session: "create_session"
+        create_session_kate: "create_session_kate"
       })
     );
   };
@@ -114,6 +117,11 @@ class Dashboard extends Component {
     const session = { session: sessionid };
     await this.props.deleteSession(session);
     //this.props.getAllSessions();
+    this.socket.send(
+      JSON.stringify({
+        delete_session_kate: "Delete session"
+      })
+    );
   };
 
   render() {
