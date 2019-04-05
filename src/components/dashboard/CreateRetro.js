@@ -20,6 +20,24 @@ class CreateRetro extends Component {
     this.setState({ [e.target.name]: e.target.value });
   }
 
+  cancelButton() {
+    this.setState({ title: "", description: "" });
+    this.props.onHide();
+  }
+
+  submitRetro = () => {
+    this.props.onSubmit(
+      this.state.title.replace(/\s+/g, "-"),
+      this.state.description,
+      this.state.sessiontype
+    );
+
+    this.setState({
+      title: "",
+      description: ""
+    });
+  };
+
   render() {
     return (
       <Modal
@@ -58,19 +76,10 @@ class CreateRetro extends Component {
           </div>
         </Modal.Body>
         <Modal.Footer>
-          <Button
-            variant="outline-success"
-            onClick={() =>
-              this.props.onSubmit(
-                this.state.title,
-                this.state.description,
-                this.state.sessiontype
-              )
-            }
-          >
+          <Button variant="outline-success" onClick={() => this.submitRetro()}>
             Create Session
           </Button>
-          <Button onClick={this.props.onHide}>Cancel</Button>
+          <Button onClick={() => this.cancelButton()}>Cancel</Button>
         </Modal.Footer>
       </Modal>
     );

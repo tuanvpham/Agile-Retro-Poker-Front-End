@@ -23,10 +23,22 @@ class Dashboard extends Component {
   constructor() {
     super();
     this.state = { retroShow: false, pokerShow: false };
+
+    this.socket = new WebSocket("ws://localhost:8000/home/dashboard/");
   }
 
   componentDidMount() {
     this.props.getAllSessions();
+
+    this.socket.onmessage = e => {
+      const dataFromSocket = JSON.parse(e.data);
+      if (dataFromSocket.hasOwnProperty("create_session")) {
+        console.log("newone");
+        this.props.getAllSessions();
+      } else if (dataFromSocket.hasOwnProperty("delete_session")) {
+        this.props.getAllSessions();
+      }
+    };
   }
 
   componentWillReceiveProps(nextProps) {
@@ -62,6 +74,11 @@ class Dashboard extends Component {
     if (sessiontype === "retro") {
       this.setState({ retroShow: false });
       //this.props.getAllSessions();
+      this.socket.send(
+        JSON.stringify({
+          create_session: "create_session"
+        })
+      );
     }
   };
 
@@ -72,7 +89,11 @@ class Dashboard extends Component {
     await this.props.chooseStories(storysubmit);
 
     this.setState({ pokerShow: false });
-    this.props.getAllSessions();
+    this.socket.send(
+      JSON.stringify({
+        create_session: "create_session"
+      })
+    );
   };
 
   startSession = sessionInfo => {
@@ -80,6 +101,12 @@ class Dashboard extends Component {
     console.log(sessionInfo);
     this.props.setCurrentSession(sessionInfo);
     //this.props.history.push("/retro");
+    this.socket.send(
+      JSON.stringify({
+        close_socket: "close the home socket"
+      })
+    );
+    this.socket.close();
     this.props.history.push("/lobby");
   };
 
@@ -117,15 +144,23 @@ class Dashboard extends Component {
                     <tr key={i} className="centeredtext">
                       {session.session_type === "R" ? (
                         <td>
-                          <FaRegStickyNote size={30} />
+                          <FaRegStickyNote
+                            size={30}
+                            style={{ paddingLeft: "10px" }}
+                          />
                         </td>
                       ) : (
                         <td>
-                          <GiCardRandom size={30} />
+                          <GiCardRandom
+                            size={30}
+                            style={{ paddingLeft: "10px" }}
+                          />
                         </td>
                       )}
 
-                      <td className="centeredtext">{session.title}</td>
+                      <td className="centeredtext">
+                        {session.title.replace(/-/g, " ")}
+                      </td>
                       <td className="centeredtext">{session.owner_username}</td>
                       {session.session_type === "R" ? (
                         <td className="centeredtext">Retrospective Board</td>
@@ -185,7 +220,14 @@ class Dashboard extends Component {
         );
       } else {
         // if there are no sessions, display a sweet message
-        dashboardContent = <h4>no sessions. create a session :)</h4>;
+        dashboardContent = (
+          <center>
+            <p />
+            <p />
+            <p />
+            <h4>Create a session to get started!</h4>
+          </center>
+        );
       }
     }
 

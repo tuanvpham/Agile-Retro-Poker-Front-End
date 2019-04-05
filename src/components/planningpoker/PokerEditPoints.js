@@ -1,4 +1,5 @@
 import React, { Component } from "react";
+import "./Poker.css";
 
 export default class PokerEditPoints extends Component {
   constructor(props) {
@@ -15,7 +16,7 @@ export default class PokerEditPoints extends Component {
   render() {
     return (
       <form onSubmit={e => this.props.submitPoints(e, this.state)}>
-        <h4>
+        <h4 className="pointsDisplay">
           Total Points:{" "}
           <input
             type="text"
@@ -23,7 +24,7 @@ export default class PokerEditPoints extends Component {
             onChange={this.handleChange}
           />
         </h4>
-        <input type="submit" value="Save Points" />
+        <input type="submit" className="saveNewPoints" value="Save Points" />
       </form>
     );
   }

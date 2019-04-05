@@ -5,3 +5,7 @@
 .navbar-dark .navbar-nav .nav-link {
   color: rgb(245, 245, 245);
 }
+
+.navbar {
+  height: 7vh;
+}

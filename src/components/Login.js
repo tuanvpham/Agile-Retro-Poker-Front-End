@@ -9,6 +9,7 @@ import TextFieldGroup from "./common/TextFieldGroup";
 import OauthPopup from "./OauthPopup";
 
 import "./styling/Login.css";
+import Logo from "./common/Logo";
 
 class Login extends Component {
   constructor() {
@@ -95,6 +96,7 @@ class Login extends Component {
       <div className="login">
         <div className="wrapper">
           <div id="formContent">
+            <Logo />
             <form onSubmit={this.onSubmit}>
               <div id="formFooter">
                 <input

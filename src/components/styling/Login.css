@@ -6,8 +6,10 @@
   width: 100%;
   min-height: 100%;
   padding: 20px;
-  top: 50%;
-  left: 50%;
+}
+
+.login {
+  height: 80vh;
 }
 
 #formContent {

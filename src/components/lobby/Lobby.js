@@ -1,11 +1,19 @@
 import React, { Component } from "react";
 import RetroBoard from "../retroboard/RetroBoard";
 //import Poker from "./Poker";
+import "./Lobby.css";
 
 // redux imports
 import update from "react-addons-update";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
+import {
+  MdAdd,
+  MdExitToApp,
+  MdDoNotDisturbAlt,
+  MdPlayCircleFilled
+} from "react-icons/md";
+import IconButton from "@material-ui/core/IconButton";
 
 class Lobby extends Component {
   constructor(props) {
@@ -190,10 +198,38 @@ class Lobby extends Component {
       <div>
         {this.state.isSessionStarted ? (
           <div>
-            <h2>The session has started. Please go back to dashboard</h2>
-            <button onClick={() => this.props.history.push("/home")}>
-              Go Back
-            </button>
+            {console.log(
+              this.state.players.indexOf(this.props.auth.user.username)
+            )}
+            <div style={{ marginTop: "250px", color: "grey" }}>
+              <center>
+                <h2>This session has already started.</h2>
+                <IconButton
+                  style={{
+                    margin: "0px",
+                    padding: "0px",
+                    zIndex: "1000",
+                    backgroundColor: "transparent"
+                  }}
+                  disableRipple="true"
+                  onClick={() => this.props.history.push("/home")}
+                >
+                  <div
+                    style={{
+                      display: "grid",
+                      marginLeft: "10px",
+                      marginTop: "20px"
+                    }}
+                  >
+                    <center>
+                      <MdExitToApp size={65} />
+                      <p />
+                      Go Back
+                    </center>
+                  </div>
+                </IconButton>
+              </center>{" "}
+            </div>
             {/*
                             Kate, open a pop up lets user go back to dashboard
                          */}
@@ -204,24 +240,82 @@ class Lobby extends Component {
               <div>{this.state.isRetro ? "" : ""}</div>
             ) : (
               <div>
-                <h1>
-                  {this.props.session.session.session_type === "R"
-                    ? "Retrospective Board"
-                    : "Planning Poker"}{" "}
-                  Lobby: {this.props.session.session.title}
-                </h1>
-                <p>Host: {this.props.session.session.owner_username}</p>
+                <div className="headerBox">
+                  <h1>
+                    {this.props.session.session.session_type === "R"
+                      ? "Retrospective Board"
+                      : "Planning Poker"}{" "}
+                    Lobby: {this.props.session.session.title.replace(/-/g, " ")}
+                    <div className="buttonControls">
+                      {this.state.isOwner ? (
+                        <div>
+                          <IconButton
+                            style={{
+                              margin: "0px",
+                              padding: "0px",
+                              zIndex: "1000",
+                              backgroundColor: "transparent"
+                            }}
+                            disableRipple="true"
+                            onClick={() => this.startGame()}
+                          >
+                            <div style={{ display: "grid" }}>
+                              <center>
+                                <MdPlayCircleFilled size={65} />
+                                Start Game
+                              </center>
+                            </div>
+                          </IconButton>
+                          <IconButton
+                            style={{
+                              margin: "0px",
+                              padding: "0px",
+                              zIndex: "1000",
+                              backgroundColor: "transparent"
+                            }}
+                            disableRipple="true"
+                            onClick={() => this.cancelGame()}
+                          >
+                            <div
+                              style={{ display: "grid", marginLeft: "10px" }}
+                            >
+                              <center>
+                                <MdExitToApp size={65} />
+                                Cancel Game
+                              </center>
+                            </div>
+                          </IconButton>
+                        </div>
+                      ) : (
+                        <div>
+                          <IconButton
+                            style={{
+                              margin: "0px",
+                              padding: "0px",
+                              zIndex: "1000",
+                              backgroundColor: "transparent"
+                            }}
+                            disableRipple="true"
+                            onClick={() => this.exitGame()}
+                          >
+                            <div
+                              style={{ display: "grid", marginLeft: "10px" }}
+                            >
+                              <center>
+                                <MdExitToApp size={65} />
+                                Exit
+                              </center>
+                            </div>
+                          </IconButton>
+                        </div>
+                      )}
+                    </div>
+                  </h1>
+                  <p>
+                    <h3>Host: {this.props.session.session.owner_username}</h3>
+                  </p>
+                </div>
                 <p>Waiting to start game...</p>
-                {this.state.isOwner ? (
-                  <div>
-                    <button onClick={this.startGame}>Start Game</button>
-                    <button onClick={this.cancelGame}>Cancel Game</button>
-                  </div>
-                ) : (
-                  <div>
-                    <button onClick={this.exitGame}>Exit</button>
-                  </div>
-                )}
                 <PlayerList players={this.state.players} />
               </div>
             )}
@@ -235,7 +329,7 @@ class Lobby extends Component {
 function PlayerList(props) {
   const players = props.players.map(item => (
     <div>
-      <li>{item} has joined!</li>
+      <li style={{ fontSize: "15px" }}>{item} has joined!</li>
     </div>
   ));
   return <ul>{players}</ul>;

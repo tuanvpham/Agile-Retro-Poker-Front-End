@@ -1,0 +1,19 @@
+.buttonControls {
+  float: right;
+  z-index: 2999;
+}
+
+.headerBox {
+  border: 2px solid #a0a0a0;
+  width: 70vw;
+  padding-top: 20px;
+  padding-bottom: 20px;
+  padding-right: 20px;
+  padding-left: 20px;
+  margin-left: 0px;
+  margin-top: 20px;
+  margin-bottom: 20px;
+  border-radius: 20px;
+  background: white;
+  box-shadow: 7px 7px 5px #a0a0a0;
+}

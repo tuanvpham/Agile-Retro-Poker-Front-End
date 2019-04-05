@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import IconButton from "@material-ui/core/IconButton";
-import { MdAdd } from "react-icons/md";
+import { MdCheck } from "react-icons/md";
 
 class RetroBoardForm extends Component {
   constructor(props) {
@@ -25,6 +25,7 @@ class RetroBoardForm extends Component {
   };
 
   onButton = e => {
+    this.props.addSubmit();
     this.props.submitText(e, this.state);
     this.setState({ itemText: "" });
   };
@@ -32,12 +33,16 @@ class RetroBoardForm extends Component {
   render() {
     return (
       <div>
-        <form onSubmit={e => this.onButton(e)} style={{ display: "flex" }}>
+        <form
+          onSubmit={e => this.onButton(e)}
+          style={{ display: "flex", marginBottom: "20px", marginTop: "10px" }}
+        >
           <input
             type="text"
             name="itemText"
             value={this.state.itemText}
             onChange={this.handleItemTextChange}
+            autoComplete="off"
           />
           <div
             style={{
@@ -47,7 +52,7 @@ class RetroBoardForm extends Component {
             }}
           >
             <IconButton aria-label="submit" type="submit">
-              <MdAdd />
+              <MdCheck style={{ float: "bottom" }} />
             </IconButton>
           </div>
         </form>

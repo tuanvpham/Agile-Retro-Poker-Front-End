@@ -10,7 +10,7 @@ import CardActions from "@material-ui/core/CardActions";
 import IconButton from "@material-ui/core/IconButton";
 import { FaEdit, FaTrash } from "react-icons/fa";
 import Typography from "@material-ui/core/Typography";
-import { MdAdd } from "react-icons/md";
+import { MdAdd, MdExitToApp, MdDoNotDisturbAlt } from "react-icons/md";
 
 import { slide as Menu } from "react-burger-menu";
 
@@ -35,7 +35,7 @@ class RetroBoard extends Component {
       whatDidNotItems: [],
       actionItems: [],
       sessionId: this.props.session.session.id,
-      wwwAddShow: true,
+      wwwAddShow: false,
       wdAddShow: false,
       actionAddShow: false
     };
@@ -119,6 +119,7 @@ class RetroBoard extends Component {
             " has ended this session!!! Please go back to Dashboard"
         );
         this.socket.close();
+        this.props.history.push("/home");
         console.log("Kate, redirect user to dashboard here");
       } else if (dataFromSocket.hasOwnProperty("exit_session_message")) {
         alert(this.props.auth.user.username + " left the session");
@@ -138,8 +139,35 @@ class RetroBoard extends Component {
       }
     };
 
-    // this.socket.onclose = () => {}
+    // kick users out of session here
+    this.socket.onclose = () => {
+      this.props.history.push("/home");
+    };
   }
+
+  wwwAddClick = () => {
+    this.setState({ wwwAddShow: true });
+  };
+
+  wwwAddSubmit = () => {
+    this.setState({ wwwAddShow: false });
+  };
+
+  wdAddClick = () => {
+    this.setState({ wdAddShow: true });
+  };
+
+  wdAddSubmit = () => {
+    this.setState({ wdAddShow: false });
+  };
+
+  actionAddClick = () => {
+    this.setState({ actionAddShow: true });
+  };
+
+  actionAddSubmit = () => {
+    this.setState({ actionAddShow: false });
+  };
 
   submitText = (e, data) => {
     e.preventDefault();
@@ -254,9 +282,66 @@ class RetroBoard extends Component {
     console.log(this.state.wwwAddShow);
     return (
       <div>
-        <h1>Retrospective Board {this.state.sessionName}</h1>
-        <div className="row">
-          <div className="column" style={{ border: "none" }}>
+        {this.state.isOwner ? (
+          <div className="buttonWrap">
+            <IconButton
+              style={{
+                margin: "0px",
+                padding: "0px",
+                zIndex: "1000",
+                backgroundColor: "transparent"
+              }}
+              disableRipple="true"
+              onClick={() => this.exitSession()}
+            >
+              <div style={{ display: "grid" }}>
+                <MdExitToApp size={65} />
+                Exit Session
+              </div>
+            </IconButton>
+            <IconButton
+              style={{
+                margin: "0px",
+                padding: "0px",
+                zIndex: "1000",
+                backgroundColor: "transparent"
+              }}
+              disableRipple="true"
+              onClick={() => this.endSession()}
+            >
+              <div style={{ display: "grid", marginLeft: "10px" }}>
+                <MdDoNotDisturbAlt size={65} />
+                End Session
+              </div>
+            </IconButton>
+          </div>
+        ) : (
+          <div style={{ float: "right" }} className="buttonWrap">
+            <IconButton
+              style={{
+                margin: "0px",
+                padding: "0px",
+                zIndex: "1000",
+                backgroundColor: "transparent"
+              }}
+              disableRipple="true"
+              onClick={() => this.exitSession()}
+            >
+              <div style={{ display: "grid" }}>
+                <MdExitToApp size={65} />
+                Exit Session
+              </div>
+            </IconButton>
+          </div>
+        )}
+        <div className="titleWrap">
+          <h1 className="h1style">
+            Retrospective Board {this.state.sessionName.replace(/-/g, " ")}
+          </h1>
+        </div>
+
+        <div className="retrorow">
+          <div className="retrocolumn" style={{ border: "none" }}>
             <Card
               style={{
                 padding: "10px",
@@ -268,20 +353,28 @@ class RetroBoard extends Component {
                   gutterBottom
                   variant="h4"
                   component="h2"
-                  style={{ paddingBottom: "5px" }}
+                  style={{
+                    paddingBottom: "5px"
+                  }}
                 >
-                  What Went Well
-                </Typography>
-                {this.state.wwwAddShow ? (
-                  <RetroBoardForm
-                    submitText={this.submitText}
-                    itemType={"what_went_well"}
-                  />
-                ) : (
-                  <IconButton>
+                  What Went Well{" "}
+                  <IconButton
+                    style={{ float: "right", margin: "0px", padding: "0px" }}
+                    disableRipple="true"
+                    onClick={() => this.wwwAddClick()}
+                  >
                     <MdAdd />
                   </IconButton>
-                )}
+                  {this.state.wwwAddShow ? (
+                    <RetroBoardForm
+                      submitText={this.submitText}
+                      itemType={"what_went_well"}
+                      addSubmit={this.wwwAddSubmit}
+                    />
+                  ) : (
+                    ""
+                  )}
+                </Typography>
 
                 <RetroBoardItemList
                   itemList={this.state.whatWentWellItems}
@@ -293,7 +386,7 @@ class RetroBoard extends Component {
               </CardContent>
             </Card>
           </div>
-          <div className="column" style={{ border: "none" }}>
+          <div className="retrocolumn" style={{ border: "none" }}>
             <Card
               style={{
                 padding: "10px",
@@ -307,12 +400,24 @@ class RetroBoard extends Component {
                   component="h2"
                   style={{ paddingBottom: "5px" }}
                 >
-                  What Didn't
+                  What Didn't{" "}
+                  <IconButton
+                    style={{ float: "right", margin: "0px", padding: "0px" }}
+                    disableRipple="true"
+                    onClick={() => this.wdAddClick()}
+                  >
+                    <MdAdd />
+                  </IconButton>
+                  {this.state.wdAddShow ? (
+                    <RetroBoardForm
+                      submitText={this.submitText}
+                      itemType={"what_did_not"}
+                      addSubmit={this.wdAddSubmit}
+                    />
+                  ) : (
+                    ""
+                  )}
                 </Typography>
-                <RetroBoardForm
-                  submitText={this.submitText}
-                  itemType={"what_did_not"}
-                />
                 <RetroBoardItemList
                   itemList={this.state.whatDidNotItems}
                   username={this.props.auth.user.username}
@@ -324,7 +429,7 @@ class RetroBoard extends Component {
             </Card>
           </div>
 
-          <div className="column " style={{ border: "none" }}>
+          <div className="retrocolumn " style={{ border: "none" }}>
             <Card
               style={{
                 padding: "10px",
@@ -338,12 +443,24 @@ class RetroBoard extends Component {
                   component="h2"
                   style={{ paddingBottom: "5px" }}
                 >
-                  Action Items
+                  Action Items{" "}
+                  <IconButton
+                    style={{ float: "right", margin: "0px", padding: "0px" }}
+                    disableRipple="true"
+                    onClick={() => this.actionAddClick()}
+                  >
+                    <MdAdd />
+                  </IconButton>
+                  {this.state.actionAddShow ? (
+                    <RetroBoardForm
+                      submitText={this.submitText}
+                      itemType={"action_items"}
+                      addSubmit={this.actionAddSubmit}
+                    />
+                  ) : (
+                    ""
+                  )}
                 </Typography>
-                <RetroBoardForm
-                  submitText={this.submitText}
-                  itemType={"action_items"}
-                />
                 <RetroBoardItemList
                   itemList={this.state.actionItems}
                   username={this.props.auth.user.username}
@@ -351,16 +468,11 @@ class RetroBoard extends Component {
                   editItem={this.editItem}
                   deleteItem={this.deleteItem}
                 />
+                {}
               </CardContent>
             </Card>
           </div>
         </div>
-        {this.state.isOwner ? (
-          <button onClick={this.endSession}>End Session</button>
-        ) : (
-          <div />
-        )}
-        <button onClick={this.exitSession}>Exit Session</button>
       </div>
     );
   }
@@ -373,76 +485,58 @@ function RetroBoardItemList(props) {
   const sessionTitle = props.sessionTitle;
   const username = props.username;
   const email = props.email;
-  var entered_text = "ok";
+  var entered_text = "edit placeholder";
   const items =
-    itemList.length > 0 ? (
-      itemList.map((item, i) =>
-        item.session_title === sessionTitle || item.session === sessionTitle ? (
-          <Card
-            key={i}
-            style={{
-              marginBottom: "20px",
-              left: "0px",
-              width: "28.5rem",
-              borderColor: "grey",
-              background: "#F5F5F5",
-              height: "auto"
-            }}
-          >
-            <CardContent>
-              {item.item_text}
-              {item.owner_username === username ||
-              item.item_owner === username ? (
-                <div
-                  style={{
-                    alignContent: "right",
-                    float: "right"
-                  }}
-                >
-                  <IconButton
-                    aria-label="edit"
-                    onClick={e => editItem(e, item, i, entered_text)}
-                    style={{ padding: "0px" }}
-                  >
-                    <FaEdit />
-                  </IconButton>
-                  <IconButton
-                    aria-label="delete"
-                    onClick={e => deleteItem(e, item, i)}
+    itemList.length > 0
+      ? itemList.map((item, i) =>
+          item.session_title === sessionTitle ||
+          item.session === sessionTitle ? (
+            <Card key={i} className="cardStyle">
+              <CardContent>
+                {item.owner_username === username ||
+                item.item_owner === username ? (
+                  <div
                     style={{
-                      padding: "0px",
-                      marginLeft: "8px",
-                      marginTop: "10px",
-                      marginBottom: "10px"
+                      alignContent: "right",
+                      float: "right"
                     }}
                   >
-                    <FaTrash />
-                  </IconButton>
-                </div>
-              ) : (
-                ""
-              )}
-            </CardContent>
-          </Card>
-        ) : (
-          ""
+                    <IconButton
+                      aria-label="edit"
+                      onClick={e => editItem(e, item, i, entered_text)}
+                      style={{
+                        padding: "0px",
+                        marginTop: "-5px",
+                        marginBottom: "10px"
+                      }}
+                    >
+                      <FaEdit />
+                    </IconButton>
+                    <IconButton
+                      aria-label="delete"
+                      onClick={e => deleteItem(e, item, i)}
+                      style={{
+                        padding: "0px",
+                        marginLeft: "8px",
+                        marginTop: "-5px",
+                        marginBottom: "10px"
+                      }}
+                    >
+                      <FaTrash />
+                    </IconButton>
+                  </div>
+                ) : (
+                  ""
+                )}
+                {item.item_text}
+              </CardContent>
+            </Card>
+          ) : (
+            ""
+          )
         )
-      )
-    ) : (
-      <div style={{ marginTop: "20px", marginBottom: "10px" }}>
-        <center>Click the plus button to add an item!</center>
-      </div>
-    );
-  return (
-    <div
-      style={{
-        maxHeight: 500,
-        overflow: "auto"
-      }}
-    >
-      {items}
-    </div>
-  );
+      : "";
+  return <div>{items}</div>;
 }
 
 RetroBoard.propTypes = {
