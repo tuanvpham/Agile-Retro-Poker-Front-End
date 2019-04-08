@@ -84,3 +84,118 @@
   margin-bottom: 10px;
   min-height: 500px;
 }
+
+.popup {
+  position: fixed;
+  width: 100%;
+  height: 100%;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  margin: auto;
+  z-index: 3000;
+  background-color: rgba(0, 0, 0, 0.5);
+}
+.popup_inner {
+  position: absolute;
+  left: 25%;
+  right: 25%;
+  top: 25%;
+  bottom: 25%;
+  margin: auto;
+  background: rgba(255, 255, 255, 0.95);
+  border-radius: 30px;
+  border: 4px solid white;
+  padding: 10px;
+  box-shadow: 7px 7px 5px #303030;
+}
+
+.popup_content {
+  height: 80%;
+  font-size: 15px;
+  padding-left: 10px;
+}
+
+.popup_footer {
+  height: 20%;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding-bottom: 20px;
+}
+
+.submitJiraButton {
+  background-color: #136ca6;
+  border: none;
+  color: white;
+  padding: 12px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 16px;
+  width: auto;
+  border-radius: 14px;
+  margin-left: 30px;
+  vertical-align: middle !important;
+}
+
+.viewJiraButton {
+  background-color: #136ca6;
+  border: none;
+  color: white;
+  padding: 12px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 16px;
+  width: auto;
+  height: 50px;
+  border-radius: 14px;
+  margin-left: 30px;
+  vertical-align: middle !important;
+}
+
+.closePopupButton {
+  background-color: grey;
+  border: none;
+  color: white;
+  padding: 8px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 16px;
+  width: 70px;
+  border-radius: 14px;
+  vertical-align: middle !important;
+}
+
+.closePopupButton2 {
+  background-color: grey;
+  border: none;
+  color: white;
+  padding: 8px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 16px;
+  width: 70px;
+  border-radius: 14px;
+  vertical-align: middle !important;
+  height: 50px;
+}
+
+.innerTable {
+  padding-left: 20px;
+  padding-right: 20px;
+  overflow: auto;
+}
+
+.jiraSuccess {
+  width: 100%;
+  height: 80%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}

@@ -2,6 +2,8 @@ import React, { Component } from "react";
 import "./RetroBoard.css";
 import RetroBoardForm from "./RetroBoardForm";
 import RetroEditItemText from "./RetroEditItemText";
+import RetroSummary from "./RetroSummary";
+import RetroFinalSummary from "./RetroFinalSummary";
 import update from "react-addons-update";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
@@ -38,7 +40,9 @@ class RetroBoard extends Component {
       sessionId: this.props.session.session.id,
       wwwAddShow: false,
       wdAddShow: false,
-      actionAddShow: false
+      actionAddShow: false,
+      isEndGame: false,
+      finalSummaryShow: false
     };
     this.socket = new WebSocket(
       "ws://localhost:8000/retro/" +
@@ -114,13 +118,9 @@ class RetroBoard extends Component {
     this.socket.onmessage = e => {
       const dataFromSocket = JSON.parse(e.data);
       if (dataFromSocket.hasOwnProperty("end_session_message")) {
-        // We should replace alert with something else
-        alert(
-          dataFromSocket.session_owner +
-            " has ended this session!!! Please go back to Dashboard"
-        );
-        this.socket.close();
-        this.props.history.push("/home");
+        this.setState({ isEndGame: true });
+        //this.socket.close();
+        //this.props.history.push("/home");
       } else if (dataFromSocket.hasOwnProperty("exit_session_message")) {
         alert(this.props.auth.user.username + " left the session");
       } else if (dataFromSocket.hasOwnProperty("delete_item_message")) {
@@ -141,7 +141,7 @@ class RetroBoard extends Component {
 
     // kick users out of session here
     this.socket.onclose = () => {
-      this.props.history.push("/home");
+      //this.props.history.push("/home");
     };
   }
 
@@ -245,6 +245,10 @@ class RetroBoard extends Component {
     this.socket.send(
       JSON.stringify({ end_session: "Owner wants to end this session!" })
     );
+    //this.props.history.push("/home");
+  };
+
+  submitActionItems = () => {
     fetch("http://localhost:8000/end_retro/", {
       method: "POST",
       headers: {
@@ -256,8 +260,9 @@ class RetroBoard extends Component {
         access_token: localStorage.getItem("access_token"),
         secret_access_token: localStorage.getItem("secret_access_token")
       })
+    }).then(res => {
+      this.setState({ finalSummaryShow: true, isEndGame: false });
     });
-    this.props.history.push("/home");
   };
 
   exitSession = () => {
@@ -393,10 +398,37 @@ class RetroBoard extends Component {
     this.submitText(e, item_state);
   };
 
+  endGameExit = () => {
+    this.setState({
+      isEndGame: false
+    });
+    this.socket.close();
+    this.props.history.push("/home");
+  };
+
+  endGame = () => {
+    this.props.history.push("/home");
+  };
+
   render() {
     console.log(this.state.wwwAddShow);
     return (
       <div>
+        {this.state.isEndGame ? (
+          <RetroSummary
+            actionItems={this.state.actionItems}
+            closeSummary={this.endGame}
+            session={this.props.session.session}
+            submitToJira={this.submitActionItems}
+          />
+        ) : this.state.finalSummaryShow ? (
+          <RetroFinalSummary
+            actionItems={this.state.actionItems}
+            closeSummary={this.endGameExit}
+            session={this.props.session.session}
+            submitToJira={this.submitActionItems}
+          />
+        ) : null}
         {this.state.isOwner ? (
           <div className="buttonWrap">
             <IconButton
