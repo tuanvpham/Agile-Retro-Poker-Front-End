@@ -230,12 +230,9 @@ class Lobby extends Component {
                 </IconButton>
               </center>{" "}
             </div>
-            {/*
-                            Kate, open a pop up lets user go back to dashboard
-                         */}
           </div>
         ) : (
-          <div>
+          <div className="lobbyContainer">
             {this.state.isOwnerClicksStartGame ? (
               <div>{this.state.isRetro ? "" : ""}</div>
             ) : (
@@ -315,8 +312,20 @@ class Lobby extends Component {
                     <h3>Host: {this.props.session.session.owner_username}</h3>
                   </p>
                 </div>
-                <p>Waiting to start game...</p>
-                <PlayerList players={this.state.players} />
+                <div className="playerlist">
+                  <center>
+                    <h3
+                      style={{
+                        marginTop: "40px",
+                        width: "100%",
+                        marginBottom: "20px"
+                      }}
+                    >
+                      Waiting to start game...
+                    </h3>
+                    <PlayerList players={this.state.players} />
+                  </center>
+                </div>
               </div>
             )}
           </div>
@@ -328,11 +337,9 @@ class Lobby extends Component {
 
 function PlayerList(props) {
   const players = props.players.map(item => (
-    <div>
-      <li style={{ fontSize: "15px" }}>{item} has joined!</li>
-    </div>
+    <div style={{ fontSize: "18px" }}>{item} has joined!</div>
   ));
-  return <ul>{players}</ul>;
+  return <div style={{ width: "100%" }}>{players}</div>;
 }
 
 Lobby.propTypes = {

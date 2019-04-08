@@ -7,7 +7,8 @@ import {
   SET_CURRENT_SESSION,
   STORY_SELECT,
   SET_NEWLY_CREATED_SESSION,
-  GET_SESSION_STORIES
+  GET_SESSION_STORIES,
+  SHOW_POKER_TOGGLE
 } from "./types";
 
 // get all sessions
@@ -75,6 +76,13 @@ export const setCurrentSession = sessionData => {
   return {
     type: SET_CURRENT_SESSION,
     payload: sessionData
+  };
+};
+
+export const setPokerShow = showPoker => {
+  return {
+    type: SHOW_POKER_TOGGLE,
+    payload: showPoker
   };
 };
 

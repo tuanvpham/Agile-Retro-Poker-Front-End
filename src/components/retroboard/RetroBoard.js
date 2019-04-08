@@ -132,7 +132,7 @@ class RetroBoard extends Component {
         const item_type = dataFromSocket.item_type;
         const new_item_text = dataFromSocket.new_item_text;
         const item_index = dataFromSocket.item_index;
-        //this.refreshEditedItem(item_id, item_type, new_item_text, item_index;
+        this.refreshEditedItem(item_id, item_type, new_item_text, item_index);
       } else {
         const retroBoardItem = dataFromSocket;
         this.addRetroBoardItems(retroBoardItem);
@@ -309,7 +309,9 @@ class RetroBoard extends Component {
               disableRipple="true"
               onClick={() => this.endSession()}
             >
-              <div style={{ display: "grid", marginLeft: "10px" }}>
+              <div
+                style={{ display: "grid", marginLeft: "10px", width: "100%" }}
+              >
                 <MdDoNotDisturbAlt size={65} />
                 End Session
               </div>
@@ -342,12 +344,7 @@ class RetroBoard extends Component {
 
         <div className="retrorow">
           <div className="retrocolumn" style={{ border: "none" }}>
-            <Card
-              style={{
-                padding: "10px",
-                margin: "10px"
-              }}
-            >
+            <Card className="bigCard">
               <CardContent>
                 <Typography
                   gutterBottom
@@ -363,7 +360,7 @@ class RetroBoard extends Component {
                     disableRipple="true"
                     onClick={() => this.wwwAddClick()}
                   >
-                    <MdAdd />
+                    <MdAdd size={25} />
                   </IconButton>
                   {this.state.wwwAddShow ? (
                     <RetroBoardForm
@@ -387,12 +384,7 @@ class RetroBoard extends Component {
             </Card>
           </div>
           <div className="retrocolumn" style={{ border: "none" }}>
-            <Card
-              style={{
-                padding: "10px",
-                margin: "10px"
-              }}
-            >
+            <Card className="bigCard">
               <CardContent>
                 <Typography
                   gutterBottom
@@ -406,7 +398,7 @@ class RetroBoard extends Component {
                     disableRipple="true"
                     onClick={() => this.wdAddClick()}
                   >
-                    <MdAdd />
+                    <MdAdd size={25} />
                   </IconButton>
                   {this.state.wdAddShow ? (
                     <RetroBoardForm
@@ -430,12 +422,7 @@ class RetroBoard extends Component {
           </div>
 
           <div className="retrocolumn " style={{ border: "none" }}>
-            <Card
-              style={{
-                padding: "10px",
-                margin: "10px"
-              }}
-            >
+            <Card className="bigCard">
               <CardContent>
                 <Typography
                   gutterBottom
@@ -449,7 +436,7 @@ class RetroBoard extends Component {
                     disableRipple="true"
                     onClick={() => this.actionAddClick()}
                   >
-                    <MdAdd />
+                    <MdAdd size={25} />
                   </IconButton>
                   {this.state.actionAddShow ? (
                     <RetroBoardForm

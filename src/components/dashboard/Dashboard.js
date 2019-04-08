@@ -14,7 +14,8 @@ import {
   createSession,
   setCurrentSession,
   chooseStories,
-  deleteSession
+  deleteSession,
+  setPokerShow
 } from "../../actions/sessionActions";
 
 import "./Dashboard.css";
@@ -64,12 +65,14 @@ class Dashboard extends Component {
     console.log(this.pokerShow);
   };
 
-  onSubmit = async (title, description, sessiontype) => {
+  onSubmit = async (title, description, sessiontype, card_type, velocity) => {
     const session = {
       title: title,
       description: description,
       session_type: sessiontype,
-      email: this.props.auth.user.email
+      email: this.props.auth.user.email,
+      card_type: card_type.value,
+      velocity: velocity
     };
 
     await this.props.createSession(session);
@@ -124,6 +127,12 @@ class Dashboard extends Component {
     );
   };
 
+  openPoker = () => {
+    this.props.setPokerShow(false);
+
+    this.setState({ pokerShow: true });
+  };
+
   render() {
     const { user } = this.props.auth;
     const { sessions, loading } = this.props.session;
@@ -131,99 +140,127 @@ class Dashboard extends Component {
     let dashboardContent;
 
     if (sessions === null || loading) {
-      dashboardContent = <Spinner />;
+      dashboardContent = (
+        <div>
+          {" "}
+          <h3
+            style={{
+              fontSize: "23px",
+              color: "#2a63b2",
+              marginBottom: "15px"
+            }}
+          >
+            Active Sessions
+          </h3>
+          <Spinner />
+        </div>
+      );
     } else {
       // check if there are any sessions
       if (Object.keys(sessions).length > 0) {
         dashboardContent = (
-          <div className="bigwrapper">
-            <Table striped hover>
-              <thead>
-                <tr className="greytext">
-                  <th />
-                  <th>SESSION NAME</th>
-                  <th>HOST</th>
-                  <th colSpan="3">SESSION TYPE</th>
-                </tr>
-              </thead>
-              <tbody>
-                {[...sessions].reverse().map((session, i) => {
-                  return (
-                    <tr key={i} className="centeredtext">
-                      {session.session_type === "R" ? (
-                        <td>
-                          <FaRegStickyNote
-                            size={30}
-                            style={{ paddingLeft: "10px" }}
-                          />
-                        </td>
-                      ) : (
-                        <td>
-                          <GiCardRandom
-                            size={30}
-                            style={{ paddingLeft: "10px" }}
-                          />
-                        </td>
-                      )}
+          <div>
+            {" "}
+            <h3
+              style={{
+                fontSize: "23px",
+                color: "#2a63b2",
+                marginBottom: "15px"
+              }}
+            >
+              Active Sessions
+            </h3>
+            <div className="bigwrapper">
+              <Table striped hover>
+                <thead>
+                  <tr className="greytext">
+                    <th />
+                    <th>SESSION NAME</th>
+                    <th>HOST</th>
+                    <th colSpan="3">SESSION TYPE</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {[...sessions].reverse().map((session, i) => {
+                    return (
+                      <tr key={i} className="centeredtext">
+                        {session.session_type === "R" ? (
+                          <td>
+                            <FaRegStickyNote
+                              size={30}
+                              style={{ paddingLeft: "10px" }}
+                            />
+                          </td>
+                        ) : (
+                          <td>
+                            <GiCardRandom
+                              size={30}
+                              style={{ paddingLeft: "10px" }}
+                            />
+                          </td>
+                        )}
 
-                      <td className="centeredtext">
-                        {session.title.replace(/-/g, " ")}
-                      </td>
-                      <td className="centeredtext">{session.owner_username}</td>
-                      {session.session_type === "R" ? (
-                        <td className="centeredtext">Retrospective Board</td>
-                      ) : (
-                        <td className="centeredtext">Planning Poker</td>
-                      )}
+                        <td className="centeredtext">
+                          {session.title.replace(/-/g, " ")}
+                        </td>
+                        <td className="centeredtext">
+                          {session.owner_username}
+                        </td>
+                        {session.session_type === "R" ? (
+                          <td className="centeredtext">Retrospective Board</td>
+                        ) : (
+                          <td className="centeredtext">Planning Poker</td>
+                        )}
 
-                      {session.session_type === "R" ? (
-                        <td>
-                          <button
-                            className="joinbutton"
-                            onClick={() => this.startSession(session)}
-                            style={{ marginLeft: "40px" }}
-                          >
-                            JOIN
-                          </button>
-                          {session.owner_username ===
-                          this.props.auth.user.username ? (
+                        {session.session_type === "R" ? (
+                          <td>
                             <button
-                              className="deletebutton"
-                              onClick={() => this.onDeleteSession(session.id)}
+                              className="joinbutton"
+                              onClick={() => this.startSession(session)}
+                              style={{ marginLeft: "40px" }}
                             >
-                              DELETE
+                              JOIN
                             </button>
-                          ) : (
-                            ""
-                          )}
-                        </td>
-                      ) : (
-                        <td>
-                          <button
-                            className="joinbutton"
-                            onClick={() => this.startSession(session)}
-                            style={{ marginLeft: "40px" }}
-                          >
-                            JOIN
-                          </button>
-                          {session.owner_username ===
-                          this.props.auth.user.username ? (
+                            {session.owner_username ===
+                            this.props.auth.user.username ? (
+                              <button
+                                className="deletebutton"
+                                onClick={() => this.onDeleteSession(session.id)}
+                              >
+                                DELETE
+                              </button>
+                            ) : (
+                              ""
+                            )}
+                          </td>
+                        ) : (
+                          <td>
                             <button
-                              className="deletebutton"
-                              onClick={() => this.onDeleteSession(session.id)}
+                              className="joinbutton"
+                              onClick={() => this.startSession(session)}
+                              style={{ marginLeft: "40px" }}
                             >
-                              DELETE
+                              JOIN
                             </button>
-                          ) : (
-                            ""
-                          )}
-                        </td>
-                      )}
-                    </tr>
-                  );
-                })}
-              </tbody>
-            </Table>
+                            {session.owner_username ===
+                            this.props.auth.user.username ? (
+                              <button
+                                className="deletebutton"
+                                onClick={() => this.onDeleteSession(session.id)}
+                              >
+                                DELETE
+                              </button>
+                            ) : (
+                              ""
+                            )}
+                          </td>
+                        )}
+                      </tr>
+                    );
+                  })}
+                </tbody>
+              </Table>
+            </div>
           </div>
         );
       } else {
@@ -240,48 +277,50 @@ class Dashboard extends Component {
     }
 
     return (
-      <div className="dashboard">
-        <div>
-          <div className="row">
-            <div className="col-md-12">
-              <h1 className="display-4">Dashboard</h1>
-              <div className="buttonWrapper">
-                <div className="buttonContainer">
-                  <Button
-                    variant="primary"
-                    className="createbutton"
-                    onClick={() => this.setState({ retroShow: true })}
-                  >
-                    <FaRegStickyNote size={50} />
-                    <br />
-                    Create Retrospective Board
-                  </Button>
+      <div className="container">
+        <div className="dashboard">
+          <div>
+            <div className="row">
+              <div className="col-md-12">
+                <h1 className="display-4">Dashboard</h1>
+                <div className="buttonWrapper">
+                  <div className="buttonContainer">
+                    <Button
+                      variant="primary"
+                      className="createbutton"
+                      onClick={() => this.setState({ retroShow: true })}
+                    >
+                      <FaRegStickyNote size={50} />
+                      <br />
+                      Create Retrospective Board
+                    </Button>
 
-                  <CreateRetro
-                    show={this.state.retroShow}
-                    onHide={this.retroClose}
-                    onSubmit={this.onSubmit}
-                  />
+                    <CreateRetro
+                      show={this.state.retroShow}
+                      onHide={this.retroClose}
+                      onSubmit={this.onSubmit}
+                    />
 
-                  <Button
-                    variant="primary"
-                    className="createbutton"
-                    onClick={() => this.setState({ pokerShow: true })}
-                  >
-                    <GiCardRandom size={50} />
-                    <br />
-                    Create Planning Poker
-                  </Button>
+                    <Button
+                      variant="primary"
+                      className="createbutton"
+                      onClick={() => this.openPoker()}
+                    >
+                      <GiCardRandom size={50} />
+                      <br />
+                      Create Planning Poker
+                    </Button>
 
-                  <CreatePoker
-                    show={this.state.pokerShow}
-                    onHide={this.pokerClose}
-                    onSubmit={this.onSubmit}
-                    onStorySelect={this.onStorySelect}
-                  />
+                    <CreatePoker
+                      show={this.state.pokerShow}
+                      onHide={this.pokerClose}
+                      onSubmit={this.onSubmit}
+                      onStorySelect={this.onStorySelect}
+                    />
+                  </div>
                 </div>
+                {dashboardContent}
               </div>
-              {dashboardContent}
             </div>
           </div>
         </div>
@@ -294,6 +333,7 @@ Dashboard.propTypes = {
   getAllSessions: PropTypes.func.isRequired,
   createSession: PropTypes.func.isRequired,
   setCurrentSession: PropTypes.func.isRequired,
+  setPokerShow: PropTypes.func.isRequired,
   deleteSession: PropTypes.func.isRequired,
   chooseStories: PropTypes.func.isRequired,
   auth: PropTypes.object.isRequired,
@@ -313,7 +353,8 @@ export default connect(
     createSession,
     setCurrentSession,
     chooseStories,
-    deleteSession
+    deleteSession,
+    setPokerShow
   }
 )(Dashboard);
 

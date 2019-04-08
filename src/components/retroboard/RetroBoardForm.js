@@ -35,7 +35,7 @@ class RetroBoardForm extends Component {
       <div>
         <form
           onSubmit={e => this.onButton(e)}
-          style={{ display: "flex", marginBottom: "20px", marginTop: "10px" }}
+          style={{ display: "flex", marginBottom: "10px", marginTop: "10px" }}
         >
           <input
             type="text"

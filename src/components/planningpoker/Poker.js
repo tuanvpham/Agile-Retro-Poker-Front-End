@@ -38,7 +38,7 @@ class Poker extends Component {
         "Pass",
         "Coffee Break"
       ],
-      velocity: 50,
+      velocity: this.props.session.session.velocity,
       totalPoints: 0
     };
 
@@ -79,6 +79,46 @@ class Poker extends Component {
           this.setState({
             stories: [...this.state.stories, modified_story]
           });
+
+          if (this.props.session.session.card_type === "modfib") {
+            this.setState({
+              cardDeck: [
+                0,
+                1 / 2,
+                1,
+                2,
+                3,
+                5,
+                8,
+                13,
+                20,
+                40,
+                100,
+                "?",
+                "Pass",
+                "Coffee Break"
+              ]
+            });
+          } else if (this.props.session.session.card_type === "seq") {
+            this.setState({
+              cardDeck: [
+                0,
+                1,
+                2,
+                3,
+                4,
+                5,
+                6,
+                7,
+                8,
+                9,
+                10,
+                "?",
+                "Pass",
+                "Coffee Break"
+              ]
+            });
+          }
         }
         this.updateVelocityProgress();
         console.log(this.state.totalPoints);
@@ -228,6 +268,7 @@ class Poker extends Component {
               return story;
             })
           }));
+          this.updateVelocityProgress();
         }
       } else if (dataFromSocket.hasOwnProperty("reset_cards")) {
         let currentStory = this.state.stories[this.state.selectedStoryIndex];
@@ -366,12 +407,13 @@ class Poker extends Component {
         Authorization: `JWT ${localStorage.getItem("jwtToken")}`
       },
       body: JSON.stringify({
-        key: currentStory.key,
+        id: currentStory.id,
         points: data.value,
         access_token: localStorage.getItem("access_token"),
         secret_access_token: localStorage.getItem("secret_access_token")
       })
     });
+
     this.socket.send(
       JSON.stringify({
         submit_points: "Owner wants to submit new story points",
@@ -379,6 +421,7 @@ class Poker extends Component {
         story: currentStory.id
       })
     );
+    this.updateVelocityProgress();
   };
 
   resetCards = () => {
@@ -1101,7 +1144,9 @@ function TotalPoints(props) {
       return (
         <div className="pointsDisplay">
           <h4>Total Points: {currentStory.points}</h4>
-          <button onClick={editPoints}>Edit Points</button>
+          <button onClick={editPoints} className="sidebarbutton">
+            Edit Points
+          </button>
         </div>
       );
     }

@@ -15,17 +15,21 @@ export default class PokerEditPoints extends Component {
 
   render() {
     return (
-      <form onSubmit={e => this.props.submitPoints(e, this.state)}>
-        <h4 className="pointsDisplay">
-          Total Points:{" "}
-          <input
-            type="text"
-            value={this.state.value}
-            onChange={this.handleChange}
-          />
-        </h4>
-        <input type="submit" className="saveNewPoints" value="Save Points" />
-      </form>
+      <div>
+        <h4 className="pointsDisplay">Total Points: </h4>
+        <input
+          type="text"
+          className="editpointsinput"
+          value={this.state.value}
+          onChange={this.handleChange}
+        />
+        <button
+          onClick={e => this.props.submitPoints(e, this.state)}
+          className="sidebarbutton"
+        >
+          Save Points
+        </button>
+      </div>
     );
   }
 }

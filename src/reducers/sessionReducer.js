@@ -4,7 +4,8 @@ import {
   SET_CURRENT_SESSION,
   STORY_SELECT,
   SET_NEWLY_CREATED_SESSION,
-  GET_SESSION_STORIES
+  GET_SESSION_STORIES,
+  SHOW_POKER_TOGGLE
 } from "../actions/types";
 
 const initialState = {
@@ -12,7 +13,8 @@ const initialState = {
   sessions: null,
   loading: false,
   sessionStories: null,
-  newlyCreatedSession: null
+  newlyCreatedSession: null,
+  showPokerToggle: false
 };
 
 export default function(state = initialState, action) {
@@ -47,6 +49,11 @@ export default function(state = initialState, action) {
       return {
         ...state,
         sessionStories: action.payload
+      };
+    case SHOW_POKER_TOGGLE:
+      return {
+        ...state,
+        showPokerToggle: action.payload
       };
     default:
       return state;

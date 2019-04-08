@@ -17,3 +17,16 @@
   background: white;
   box-shadow: 7px 7px 5px #a0a0a0;
 }
+
+.lobbyContainer {
+  height: 100%;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.playerlist {
+  height: 100%;
+  width: 100%;
+}

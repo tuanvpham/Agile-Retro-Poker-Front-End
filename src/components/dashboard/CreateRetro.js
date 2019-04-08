@@ -9,6 +9,12 @@ class CreateRetro extends Component {
     this.state = {
       title: "",
       description: "",
+      card_type: {
+        value: "fib",
+        label:
+          "Fibonacci (0, 1, 2, 3, 5, 8, 13, 21, 34, 55, 89, ?, Pass, Coffee )"
+      },
+      velocity: 0,
       sessiontype: "retro",
       errors: {}
     };
@@ -29,7 +35,9 @@ class CreateRetro extends Component {
     this.props.onSubmit(
       this.state.title.replace(/\s+/g, "-"),
       this.state.description,
-      this.state.sessiontype
+      this.state.sessiontype,
+      this.state.card_type,
+      this.state.velocity
     );
 
     this.setState({

@@ -20,7 +20,7 @@ class CreatePoker extends Component {
     this.state = {
       title: "",
       description: "",
-      cardSet: null,
+      card_type: "",
       velocity: 50,
       sessiontype: "poker",
       errors: {},
@@ -50,17 +50,17 @@ class CreatePoker extends Component {
 
   onChangeDropdown = selectedOption => {
     console.log(selectedOption.value);
-    this.setState({ cardSet: selectedOption });
+    this.setState({ card_type: selectedOption });
   };
 
   chooseStoriesButton = async () => {
     await this.props.onSubmit(
       this.state.title.replace(/\s+/g, "-"),
       this.state.description,
-      this.state.sessiontype
+      this.state.sessiontype,
+      this.state.card_type,
+      this.state.velocity
     );
-
-    this.setState({ title: "", description: "" });
   };
 
   componentWillReceiveProps(nextProps) {
@@ -72,9 +72,6 @@ class CreatePoker extends Component {
           stories: [...this.state.stories, story]
         });*/
       });
-
-      console.log("stories temp array:");
-      console.log(stories);
 
       this.setState({
         sessionCreated: true,
@@ -115,16 +112,19 @@ class CreatePoker extends Component {
   };
 
   cancelButton() {
-    this.setState({ title: "", description: "", cardSet: null, velocity: 50 });
+    this.setState({ title: "", description: "", card_type: "", velocity: 50 });
     this.props.onHide();
   }
 
   finalCreatePoker = () => {
-    this.props.onStorySelect(this.state.storySelection);
-
     this.setState({
+      title: "",
+      description: "",
+      velocity: 50,
       sessionCreated: false
     });
+
+    this.props.onStorySelect(this.state.storySelection);
   };
 
   render() {
@@ -177,8 +177,8 @@ class CreatePoker extends Component {
                 <p />
 
                 <DropDownMenu
-                  name="cardSet"
-                  value={this.state.cardSet}
+                  name="card_type"
+                  value={this.state.card_type}
                   onChange={this.onChangeDropdown}
                 />
               </form>
@@ -255,11 +255,7 @@ class CreatePoker extends Component {
         </Modal.Body>
         <Modal.Footer>
           {this.state.sessionCreated ? (
-            <Button
-              onClick={() =>
-                this.props.onStorySelect(this.state.storySelection)
-              }
-            >
+            <Button onClick={() => this.finalCreatePoker()}>
               Create Session
             </Button>
           ) : (
