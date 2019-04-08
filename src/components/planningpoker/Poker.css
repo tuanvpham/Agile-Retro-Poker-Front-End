@@ -175,6 +175,17 @@
   box-shadow: 0 0 30px rgba(0, 0, 0, 0.5);
   z-index: 9999 !important;
 }
+.clicked {
+  vertical-align: top;
+  display: inline-block;
+  *display: inline;
+  cursor: pointer;
+  z-index: 100000 !important;
+  box-shadow: 0 0 30px rgba(0, 0, 0, 0.5);
+  margin-top: -50px;
+  transform: scale(1.3);
+  border-radius: 200px;
+}
 /* Animation Styles */
 .all-players-cards-selected {
   padding-bottom: 30px;
@@ -214,7 +225,8 @@
   margin-bottom: 10px;
   border-radius: 20px;
   border: 2px solid #a0a0a0;
-  padding: 15px;
+  padding-left: 20px;
+  padding-top: 5px;
   box-shadow: 7px 7px 5px #a0a0a0;
 }
 
@@ -259,7 +271,7 @@
     width: 25%;
     min-width: 240px;
     max-width: 340px;
-    background-color: #dcdcdc;
+    background-color: #d2d1d1;
     position: absolute;
     height: 100%;
     right: 0px;
@@ -402,23 +414,25 @@
   padding-left: 10px;
   font-size: 13;
   height: auto;
-  line-height: auto;
+  line-height: 20px;
   padding-top: 5px;
   padding-bottom: 5px;
-  background-color: #dcdcdc;
+  background-color: #d2d1d1;
+  border-bottom: 1px solid #bebebe;
 }
 
 .Collapsible__trigger {
   padding-left: 10px;
-  border-bottom: 2px solid #398eca;
+  border-bottom: 3px solid #4a4a4a;
   padding-right: 230px;
   font-size: 20px;
+  color: white;
   padding-top: 5px;
   margin-bottom: 5px;
   line-height: 30px;
   width: auto;
   white-space: nowrap;
-  background: #c0c0c0;
+  background: #4a4a4a;
 }
 
 .Collapsible {
@@ -490,7 +504,97 @@
 .editpointsinput {
   margin-top: 5px;
   padding-top: 0px;
-  color: green;
-  background-color: green;
-  border: 4px solid red;
+}
+
+.storyTracker {
+  font-size: 30px;
+}
+
+.popup_content {
+  height: 80%;
+  font-size: 15px;
+  padding-left: 10px;
+}
+
+.popup_footer {
+  height: 20%;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding-bottom: 20px;
+}
+
+.submitJiraButton {
+  background-color: #136ca6;
+  border: none;
+  color: white;
+  padding: 12px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 16px;
+  width: auto;
+  border-radius: 14px;
+  margin-left: 30px;
+  vertical-align: middle !important;
+}
+
+.viewJiraButton {
+  background-color: #136ca6;
+  border: none;
+  color: white;
+  padding: 12px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 16px;
+  width: auto;
+  height: 50px;
+  border-radius: 14px;
+  margin-left: 30px;
+  vertical-align: middle !important;
+}
+
+.closePopupButton {
+  background-color: grey;
+  border: none;
+  color: white;
+  padding: 8px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 16px;
+  width: 70px;
+  border-radius: 14px;
+  vertical-align: middle !important;
+}
+
+.closePopupButton2 {
+  background-color: grey;
+  border: none;
+  color: white;
+  padding: 8px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 16px;
+  width: 70px;
+  border-radius: 14px;
+  vertical-align: middle !important;
+  height: 50px;
+}
+
+.innerTable {
+  padding-left: 20px;
+  padding-right: 20px;
+  overflow: auto;
+}
+
+.jiraSuccess {
+  width: 100%;
+  height: 80%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }

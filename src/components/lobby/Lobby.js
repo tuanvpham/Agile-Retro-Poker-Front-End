@@ -135,18 +135,14 @@ class Lobby extends Component {
       } else if (dataFromSocket.hasOwnProperty("cancel_game")) {
         alert("Owner of this session has cancelled the game.");
         this.socket.close();
-        /* 
-                    Redirect all users back to dashboard 
-                 */
+        this.props.history.push("/home");
       } else if (dataFromSocket.hasOwnProperty("exit_game")) {
         let indexPlayer = this.state.players.indexOf(dataFromSocket.player);
         this.setState(prevState => ({
           players: prevState.players.filter((_, i) => i !== indexPlayer)
         }));
         this.socket.close();
-        /*
-                    Redirect user back to dashboard if user is not the owner
-                */
+        this.props.history.push("/home");
       }
     };
   }
@@ -177,23 +173,6 @@ class Lobby extends Component {
   };
 
   render() {
-    // This cardDeck will be set by poker creation form
-    const cardDeck = [
-      0,
-      1,
-      2,
-      3,
-      5,
-      8,
-      13,
-      21,
-      34,
-      55,
-      89,
-      "?",
-      "Pass",
-      "Coffee Break"
-    ];
     return (
       <div>
         {this.state.isSessionStarted ? (
@@ -238,14 +217,14 @@ class Lobby extends Component {
             ) : (
               <div>
                 <div className="headerBox">
-                  <h1>
+                  <h2 style={{ marginTop: "0px" }}>
                     {this.props.session.session.session_type === "R"
                       ? "Retrospective Board"
                       : "Planning Poker"}{" "}
                     Lobby: {this.props.session.session.title.replace(/-/g, " ")}
                     <div className="buttonControls">
                       {this.state.isOwner ? (
-                        <div>
+                        <div style={{ display: "grid" }}>
                           <IconButton
                             style={{
                               margin: "0px",
@@ -256,9 +235,14 @@ class Lobby extends Component {
                             disableRipple="true"
                             onClick={() => this.startGame()}
                           >
-                            <div style={{ display: "grid" }}>
+                            <div
+                              style={{ display: "grid", paddingBottom: "10px" }}
+                            >
                               <center>
-                                <MdPlayCircleFilled size={65} />
+                                <MdPlayCircleFilled
+                                  size={35}
+                                  style={{ marginRight: "5px" }}
+                                />
                                 Start Game
                               </center>
                             </div>
@@ -277,7 +261,10 @@ class Lobby extends Component {
                               style={{ display: "grid", marginLeft: "10px" }}
                             >
                               <center>
-                                <MdExitToApp size={65} />
+                                <MdExitToApp
+                                  size={35}
+                                  style={{ marginRight: "5px" }}
+                                />
                                 Cancel Game
                               </center>
                             </div>
@@ -299,7 +286,10 @@ class Lobby extends Component {
                               style={{ display: "grid", marginLeft: "10px" }}
                             >
                               <center>
-                                <MdExitToApp size={65} />
+                                <MdExitToApp
+                                  size={35}
+                                  style={{ marginRight: "5px" }}
+                                />
                                 Exit
                               </center>
                             </div>
@@ -307,9 +297,11 @@ class Lobby extends Component {
                         </div>
                       )}
                     </div>
-                  </h1>
+                  </h2>
                   <p>
-                    <h3>Host: {this.props.session.session.owner_username}</h3>
+                    <h4 style={{ paddingTop: "10px" }}>
+                      Host: {this.props.session.session.owner_username}
+                    </h4>
                   </p>
                 </div>
                 <div className="playerlist">

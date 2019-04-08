@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import PokerEditPoints from "./PokerEditPoints";
 import PokerSummary from "./PokerSummary";
+import FinalSummary from "./FinalSummary";
 import "./Poker.css";
 
 import IconButton from "@material-ui/core/IconButton";
@@ -22,6 +23,7 @@ class Poker extends Component {
       members: [],
       isOwner: false,
       isEndGame: false,
+      finalSummaryShow: false,
       cardDeck: [
         0,
         1,
@@ -39,7 +41,21 @@ class Poker extends Component {
         "Coffee Break"
       ],
       velocity: this.props.session.session.velocity,
-      totalPoints: 0
+      totalPoints: 0,
+      card0sel: false,
+      card1sel: false,
+      card2sel: false,
+      card3sel: false,
+      card4sel: false,
+      card5sel: false,
+      card6sel: false,
+      card7sel: false,
+      card8sel: false,
+      card9sel: false,
+      card10sel: false,
+      card11sel: false,
+      card12sel: false,
+      card13sel: false
     };
 
     this.socket = new WebSocket(
@@ -307,7 +323,21 @@ class Poker extends Component {
     if (this.state.selectedStoryIndex === this.state.stories.length - 1) return;
 
     this.setState(prevState => ({
-      selectedStoryIndex: prevState.selectedStoryIndex + 1
+      selectedStoryIndex: prevState.selectedStoryIndex + 1,
+      card0sel: false,
+      card1sel: false,
+      card2sel: false,
+      card3sel: false,
+      card4sel: false,
+      card5sel: false,
+      card6sel: false,
+      card7sel: false,
+      card8sel: false,
+      card9sel: false,
+      card10sel: false,
+      card11sel: false,
+      card12sel: false,
+      card13sel: false
     }));
   };
 
@@ -315,7 +345,21 @@ class Poker extends Component {
     if (this.state.selectedStoryIndex === 0) return;
 
     this.setState(prevState => ({
-      selectedStoryIndex: prevState.selectedStoryIndex - 1
+      selectedStoryIndex: prevState.selectedStoryIndex - 1,
+      card0sel: false,
+      card1sel: false,
+      card2sel: false,
+      card3sel: false,
+      card4sel: false,
+      card5sel: false,
+      card6sel: false,
+      card7sel: false,
+      card8sel: false,
+      card9sel: false,
+      card10sel: false,
+      card11sel: false,
+      card12sel: false,
+      card13sel: false
     }));
   };
 
@@ -335,8 +379,263 @@ class Poker extends Component {
     );
   };
 
-  playCards = (e, data) => {
+  playCards = (e, data, number) => {
     let currentStory = this.state.stories[this.state.selectedStoryIndex];
+
+    switch (number) {
+      case 0:
+        this.setState({
+          card0sel: true,
+          card1sel: false,
+          card2sel: false,
+          card3sel: false,
+          card4sel: false,
+          card5sel: false,
+          card6sel: false,
+          card7sel: false,
+          card8sel: false,
+          card9sel: false,
+          card10sel: false,
+          card11sel: false,
+          card12sel: false,
+          card13sel: false
+        });
+        break;
+      case 1:
+        this.setState({
+          card0sel: false,
+          card1sel: true,
+          card2sel: false,
+          card3sel: false,
+          card4sel: false,
+          card5sel: false,
+          card6sel: false,
+          card7sel: false,
+          card8sel: false,
+          card9sel: false,
+          card10sel: false,
+          card11sel: false,
+          card12sel: false,
+          card13sel: false
+        });
+        break;
+      case 2:
+        this.setState({
+          card0sel: false,
+          card1sel: false,
+          card2sel: true,
+          card3sel: false,
+          card4sel: false,
+          card5sel: false,
+          card6sel: false,
+          card7sel: false,
+          card8sel: false,
+          card9sel: false,
+          card10sel: false,
+          card11sel: false,
+          card12sel: false,
+          card13sel: false
+        });
+        break;
+      case 3:
+        this.setState({
+          card0sel: false,
+          card1sel: false,
+          card2sel: false,
+          card3sel: true,
+          card4sel: false,
+          card5sel: false,
+          card6sel: false,
+          card7sel: false,
+          card8sel: false,
+          card9sel: false,
+          card10sel: false,
+          card11sel: false,
+          card12sel: false,
+          card13sel: false
+        });
+        break;
+      case 4:
+        this.setState({
+          card0sel: false,
+          card1sel: false,
+          card2sel: false,
+          card3sel: false,
+          card4sel: true,
+          card5sel: false,
+          card6sel: false,
+          card7sel: false,
+          card8sel: false,
+          card9sel: false,
+          card10sel: false,
+          card11sel: false,
+          card12sel: false,
+          card13sel: false
+        });
+        break;
+      case 5:
+        this.setState({
+          card0sel: false,
+          card1sel: false,
+          card2sel: false,
+          card3sel: false,
+          card4sel: false,
+          card5sel: true,
+          card6sel: false,
+          card7sel: false,
+          card8sel: false,
+          card9sel: false,
+          card10sel: false,
+          card11sel: false,
+          card12sel: false,
+          card13sel: false
+        });
+        break;
+      case 6:
+        this.setState({
+          card0sel: false,
+          card1sel: false,
+          card2sel: false,
+          card3sel: false,
+          card4sel: false,
+          card5sel: false,
+          card6sel: true,
+          card7sel: false,
+          card8sel: false,
+          card9sel: false,
+          card10sel: false,
+          card11sel: false,
+          card12sel: false,
+          card13sel: false
+        });
+        break;
+      case 7:
+        this.setState({
+          card0sel: false,
+          card1sel: false,
+          card2sel: false,
+          card3sel: false,
+          card4sel: false,
+          card5sel: false,
+          card6sel: false,
+          card7sel: true,
+          card8sel: false,
+          card9sel: false,
+          card10sel: false,
+          card11sel: false,
+          card12sel: false,
+          card13sel: false
+        });
+        break;
+      case 8:
+        this.setState({
+          card0sel: false,
+          card1sel: false,
+          card2sel: false,
+          card3sel: false,
+          card4sel: false,
+          card5sel: false,
+          card6sel: false,
+          card7sel: false,
+          card8sel: true,
+          card9sel: false,
+          card10sel: false,
+          card11sel: false,
+          card12sel: false,
+          card13sel: false
+        });
+        break;
+      case 9:
+        this.setState({
+          card0sel: false,
+          card1sel: false,
+          card2sel: false,
+          card3sel: false,
+          card4sel: false,
+          card5sel: false,
+          card6sel: false,
+          card7sel: false,
+          card8sel: false,
+          card9sel: true,
+          card10sel: false,
+          card11sel: false,
+          card12sel: false,
+          card13sel: false
+        });
+        break;
+      case 10:
+        this.setState({
+          card0sel: false,
+          card1sel: false,
+          card2sel: false,
+          card3sel: false,
+          card4sel: false,
+          card5sel: false,
+          card6sel: false,
+          card7sel: false,
+          card8sel: false,
+          card9sel: false,
+          card10sel: true,
+          card11sel: false,
+          card12sel: false,
+          card13sel: false
+        });
+        break;
+      case 11:
+        this.setState({
+          card0sel: false,
+          card1sel: false,
+          card2sel: false,
+          card3sel: false,
+          card4sel: false,
+          card5sel: false,
+          card6sel: false,
+          card7sel: false,
+          card8sel: false,
+          card9sel: false,
+          card10sel: false,
+          card11sel: true,
+          card12sel: false,
+          card13sel: false
+        });
+        break;
+      case 12:
+        this.setState({
+          card0sel: false,
+          card1sel: false,
+          card2sel: false,
+          card3sel: false,
+          card4sel: false,
+          card5sel: false,
+          card6sel: false,
+          card7sel: false,
+          card8sel: false,
+          card9sel: false,
+          card10sel: false,
+          card11sel: false,
+          card12sel: true,
+          card13sel: false
+        });
+        break;
+      case 13:
+        this.setState({
+          card0sel: false,
+          card1sel: false,
+          card2sel: false,
+          card3sel: false,
+          card4sel: false,
+          card5sel: false,
+          card6sel: false,
+          card7sel: false,
+          card8sel: false,
+          card9sel: false,
+          card10sel: false,
+          card11sel: false,
+          card12sel: false,
+          card13sel: true
+        });
+        break;
+    }
 
     switch (data) {
       case "?":
@@ -453,13 +752,22 @@ class Poker extends Component {
         access_token: localStorage.getItem("access_token"),
         secret_access_token: localStorage.getItem("secret_access_token")
       })
+    }).then(res => {
+      this.setState({ finalSummaryShow: true, isEndGame: false });
     });
   };
 
   endGame = () => {
     this.setState({
-      isEndGame: !this.state.isEndGame
+      isEndGame: true
     });
+  };
+
+  endGameExit = () => {
+    this.setState({
+      isEndGame: false
+    });
+    this.socket.close();
   };
 
   updateVelocityProgress = () => {
@@ -518,10 +826,6 @@ class Poker extends Component {
         <div className="game-main-content">
           <div className="game-board">
             <div className="story-info">
-              <h2 style={{}}>
-                Planning Poker:{" "}
-                {this.props.session.session.title.replace(/-/g, " ")}
-              </h2>
               <div className="story-description">
                 <h3>Current Story: {currentStory.title}</h3>
                 <h5>{currentStory.description}</h5>
@@ -542,13 +846,24 @@ class Poker extends Component {
                   session={this.props.session.session}
                   submitToJira={this.submitToJira}
                 />
+              ) : this.state.finalSummaryShow ? (
+                <FinalSummary
+                  stories={this.state.stories}
+                  closeSummary={this.endGameExit}
+                  session={this.props.session.session}
+                  submitToJira={this.submitToJira}
+                />
               ) : null}
             </div>
             <div className="players-cards-container">
               <div className="player-cards-wrapper">
                 <div
-                  className="card-rig card-in-hand"
-                  onClick={e => this.playCards(e, this.state.cardDeck[0])}
+                  className={
+                    this.state.card0sel
+                      ? "card-rig clicked"
+                      : "card-rig card-in-hand"
+                  }
+                  onClick={e => this.playCards(e, this.state.cardDeck[0], 0)}
                 >
                   <div className="card-wrapper perspective-wrapper">
                     <div
@@ -571,8 +886,12 @@ class Poker extends Component {
                 </div>
 
                 <div
-                  className="card-rig card-in-hand"
-                  onClick={e => this.playCards(e, this.state.cardDeck[1])}
+                  className={
+                    this.state.card1sel
+                      ? "card-rig clicked"
+                      : "card-rig card-in-hand"
+                  }
+                  onClick={e => this.playCards(e, this.state.cardDeck[1], 1)}
                 >
                   <div className="card-wrapper perspective-wrapper">
                     <div
@@ -595,8 +914,12 @@ class Poker extends Component {
                 </div>
 
                 <div
-                  className="card-rig card-in-hand"
-                  onClick={e => this.playCards(e, this.state.cardDeck[2])}
+                  className={
+                    this.state.card2sel
+                      ? "card-rig clicked"
+                      : "card-rig card-in-hand"
+                  }
+                  onClick={e => this.playCards(e, this.state.cardDeck[2], 2)}
                 >
                   <div className="card-wrapper perspective-wrapper">
                     <div
@@ -619,8 +942,12 @@ class Poker extends Component {
                 </div>
 
                 <div
-                  className="card-rig card-in-hand"
-                  onClick={e => this.playCards(e, this.state.cardDeck[3])}
+                  className={
+                    this.state.card3sel
+                      ? "card-rig clicked"
+                      : "card-rig card-in-hand"
+                  }
+                  onClick={e => this.playCards(e, this.state.cardDeck[3], 3)}
                 >
                   <div className="card-wrapper perspective-wrapper">
                     <div
@@ -643,8 +970,12 @@ class Poker extends Component {
                 </div>
 
                 <div
-                  className="card-rig card-in-hand"
-                  onClick={e => this.playCards(e, this.state.cardDeck[4])}
+                  className={
+                    this.state.card4sel
+                      ? "card-rig clicked"
+                      : "card-rig card-in-hand"
+                  }
+                  onClick={e => this.playCards(e, this.state.cardDeck[4], 4)}
                 >
                   <div className="card-wrapper perspective-wrapper">
                     <div
@@ -667,8 +998,12 @@ class Poker extends Component {
                 </div>
 
                 <div
-                  className="card-rig card-in-hand"
-                  onClick={e => this.playCards(e, this.state.cardDeck[5])}
+                  className={
+                    this.state.card5sel
+                      ? "card-rig clicked"
+                      : "card-rig card-in-hand"
+                  }
+                  onClick={e => this.playCards(e, this.state.cardDeck[5], 5)}
                 >
                   <div className="card-wrapper perspective-wrapper">
                     <div
@@ -691,8 +1026,12 @@ class Poker extends Component {
                 </div>
 
                 <div
-                  className="card-rig card-in-hand"
-                  onClick={e => this.playCards(e, this.state.cardDeck[6])}
+                  className={
+                    this.state.card6sel
+                      ? "card-rig clicked"
+                      : "card-rig card-in-hand"
+                  }
+                  onClick={e => this.playCards(e, this.state.cardDeck[6], 6)}
                 >
                   <div className="card-wrapper perspective-wrapper">
                     <div
@@ -715,8 +1054,12 @@ class Poker extends Component {
                 </div>
 
                 <div
-                  className="card-rig card-in-hand"
-                  onClick={e => this.playCards(e, this.state.cardDeck[7])}
+                  className={
+                    this.state.card7sel
+                      ? "card-rig clicked"
+                      : "card-rig card-in-hand"
+                  }
+                  onClick={e => this.playCards(e, this.state.cardDeck[7], 7)}
                 >
                   <div className="card-wrapper perspective-wrapper">
                     <div
@@ -739,8 +1082,12 @@ class Poker extends Component {
                 </div>
 
                 <div
-                  className="card-rig card-in-hand"
-                  onClick={e => this.playCards(e, this.state.cardDeck[8])}
+                  className={
+                    this.state.card8sel
+                      ? "card-rig clicked"
+                      : "card-rig card-in-hand"
+                  }
+                  onClick={e => this.playCards(e, this.state.cardDeck[8], 8)}
                 >
                   <div className="card-wrapper perspective-wrapper">
                     <div
@@ -763,8 +1110,12 @@ class Poker extends Component {
                 </div>
 
                 <div
-                  className="card-rig card-in-hand"
-                  onClick={e => this.playCards(e, this.state.cardDeck[9])}
+                  className={
+                    this.state.card9sel
+                      ? "card-rig clicked"
+                      : "card-rig card-in-hand"
+                  }
+                  onClick={e => this.playCards(e, this.state.cardDeck[9], 9)}
                 >
                   <div className="card-wrapper perspective-wrapper">
                     <div
@@ -787,8 +1138,12 @@ class Poker extends Component {
                 </div>
 
                 <div
-                  className="card-rig card-in-hand"
-                  onClick={e => this.playCards(e, this.state.cardDeck[10])}
+                  className={
+                    this.state.card10sel
+                      ? "card-rig clicked"
+                      : "card-rig card-in-hand"
+                  }
+                  onClick={e => this.playCards(e, this.state.cardDeck[10], 10)}
                 >
                   <div className="card-wrapper perspective-wrapper">
                     <div
@@ -811,8 +1166,12 @@ class Poker extends Component {
                 </div>
 
                 <div
-                  className="card-rig card-in-hand"
-                  onClick={e => this.playCards(e, "?")}
+                  className={
+                    this.state.card11sel
+                      ? "card-rig clicked"
+                      : "card-rig card-in-hand"
+                  }
+                  onClick={e => this.playCards(e, "?", 11)}
                 >
                   <div className="card-wrapper perspective-wrapper">
                     <div
@@ -835,8 +1194,12 @@ class Poker extends Component {
                 </div>
 
                 <div
-                  className="card-rig card-in-hand"
-                  onClick={e => this.playCards(e, "Pass")}
+                  className={
+                    this.state.card12sel
+                      ? "card-rig clicked"
+                      : "card-rig card-in-hand"
+                  }
+                  onClick={e => this.playCards(e, "Pass", 12)}
                 >
                   <div className="card-wrapper perspective-wrapper">
                     <div
@@ -859,8 +1222,12 @@ class Poker extends Component {
                 </div>
 
                 <div
-                  className="card-in-hand card-rig-last"
-                  onClick={e => this.playCards(e, "Coffee Break")}
+                  className={
+                    this.state.card13sel
+                      ? "card-rig clicked"
+                      : "card-rig card-in-hand"
+                  }
+                  onClick={e => this.playCards(e, "Coffee Break", 13)}
                 >
                   <div className="card-wrapper perspective-wrapper">
                     <div
@@ -914,14 +1281,15 @@ class Poker extends Component {
                   <span className>STORY</span>
                   <div className="storyControls">
                     {this.state.isOwner ? (
-                      <div>
+                      <div className="storyTracker">
                         <IconButton onClick={this.prevStory}>
-                          <MdChevronLeft size={20} />
+                          <MdChevronLeft size={25} />
                         </IconButton>
-                        {this.state.selectedStoryIndex + 1}/
+                        {this.state.selectedStoryIndex + 1}
+                        {" / "}
                         {this.state.stories.length}
                         <IconButton onClick={this.nextStory}>
-                          <MdChevronRight size={20} />
+                          <MdChevronRight size={25} />
                         </IconButton>
                       </div>
                     ) : (

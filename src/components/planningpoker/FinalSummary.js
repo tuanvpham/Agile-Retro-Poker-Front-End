@@ -2,7 +2,7 @@ import React, { Component } from "react";
 import "./Poker.css";
 import { Table } from "react-bootstrap";
 
-export default class PokerSummary extends Component {
+export default class FinalSummary extends Component {
   constructor(props) {
     super(props);
     this.state = {};
@@ -16,31 +16,25 @@ export default class PokerSummary extends Component {
             <h1 style={{ paddingBottom: "10px" }}>
               {this.props.session.title} - Game Summary
             </h1>
-            <div className="innerTable">
-              <Table striped hover>
-                <thead>
-                  <tr className="greytext">
-                    <th>STORY TITLE</th>
-                    <th>SCORE</th>
-                  </tr>
-                </thead>
-
-                <Stories stories={this.props.stories} />
-              </Table>
-            </div>
+            <div className="jiraSuccess">Successfully submitted to Jira!</div>
           </div>
           <div className="popup_footer">
             <button
               onClick={this.props.closeSummary}
-              className="closePopupButton"
+              className="closePopupButton2"
             >
               Close
             </button>
             <button
-              onClick={this.props.submitToJira}
-              className="submitJiraButton"
+              onClick={() =>
+                window.open(
+                  "https://agilecommandcentralgroup10.atlassian.net/secure/Dashboard.jspa",
+                  "_blank"
+                )
+              }
+              className="viewJiraButton"
             >
-              Submit to Jira
+              Go to Jira
             </button>
           </div>
         </div>

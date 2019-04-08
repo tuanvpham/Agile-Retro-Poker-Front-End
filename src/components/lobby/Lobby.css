@@ -4,7 +4,6 @@
 }
 
 .headerBox {
-  border: 2px solid #a0a0a0;
   width: 70vw;
   padding-top: 20px;
   padding-bottom: 20px;
@@ -15,7 +14,7 @@
   margin-bottom: 20px;
   border-radius: 20px;
   background: white;
-  box-shadow: 7px 7px 5px #a0a0a0;
+  box-shadow: 1px 1px 10px #a0a0a0;
 }
 
 .lobbyContainer {
@@ -29,4 +28,10 @@
 .playerlist {
   height: 100%;
   width: 100%;
+  background: white;
+  height: auto;
+  min-height: 33vw;
+  overflow-y: hidden;
+  border-radius: 15px;
+  box-shadow: 1px 1px 10px #a0a0a0;
 }
