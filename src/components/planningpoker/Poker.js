@@ -724,6 +724,23 @@ class Poker extends Component {
   };
 
   resetCards = () => {
+    this.setState(prevState => ({
+      selectedStoryIndex: prevState.selectedStoryIndex + 1,
+      card0sel: false,
+      card1sel: false,
+      card2sel: false,
+      card3sel: false,
+      card4sel: false,
+      card5sel: false,
+      card6sel: false,
+      card7sel: false,
+      card8sel: false,
+      card9sel: false,
+      card10sel: false,
+      card11sel: false,
+      card12sel: false,
+      card13sel: false
+    }));
     let currentStory = this.state.stories[this.state.selectedStoryIndex];
     this.socket.send(
       JSON.stringify({
@@ -1213,7 +1230,7 @@ class Poker extends Component {
                             <span>Pass</span>
                           </div>
                           <div className="text-center player-vote">
-                            <span>Pass</span>
+                            <span>P</span>
                           </div>
                         </div>
                       </div>
