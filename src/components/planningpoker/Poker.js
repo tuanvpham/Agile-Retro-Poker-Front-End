@@ -780,6 +780,12 @@ class Poker extends Component {
     });
   };
 
+  returnToGame = () => {
+    this.setState({
+      isEndGame: false
+    });
+  };
+
   endGameExit = () => {
     this.setState({
       isEndGame: false
@@ -859,7 +865,7 @@ class Poker extends Component {
               {this.state.isEndGame ? (
                 <PokerSummary
                   stories={this.state.stories}
-                  closeSummary={this.endGame}
+                  closeSummary={this.returnToGame}
                   session={this.props.session.session}
                   submitToJira={this.submitToJira}
                 />
