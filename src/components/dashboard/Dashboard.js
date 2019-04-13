@@ -3,6 +3,7 @@ import { Modal, Button, Table } from "react-bootstrap";
 import Spinner from "../common/Spinner";
 import CreateRetro from "./CreateRetro";
 import CreatePoker from "./CreatePoker";
+import ChoosePokerStories from "./ChoosePokerStories";
 import { FaRegStickyNote } from "react-icons/fa";
 import { GiCardRandom } from "react-icons/gi";
 
@@ -20,10 +21,18 @@ import {
 
 import "./Dashboard.css";
 
+const delay = ms => new Promise(res => setTimeout(res, ms));
+
 class Dashboard extends Component {
   constructor() {
     super();
-    this.state = { retroShow: false, pokerShow: false };
+    this.state = {
+      retroShow: false,
+      pokerShow: false,
+      chooseStoriesShow: false,
+
+      pokersessioncreating: null
+    };
 
     this.socket = new WebSocket("ws://localhost:8000/home/dashboard/");
   }
@@ -75,16 +84,34 @@ class Dashboard extends Component {
       velocity: velocity
     };
 
+    const sessiontype2 = {
+      owner_username: this.props.auth.user.username,
+      title: title,
+      description: description,
+      session_type: sessiontype === "retro" ? "R" : "P",
+      card_type: card_type.value,
+      velocity: velocity
+    };
+
+    this.setState({ pokersessioncreating: sessiontype2 });
+
     await this.props.createSession(session);
 
     if (sessiontype === "retro") {
       this.setState({ retroShow: false });
       //this.props.getAllSessions();
+      await delay(1000);
       this.socket.send(
         JSON.stringify({
           create_session_kate: "create_session_kate"
         })
       );
+
+      //this.startSession(session);
+    }
+    if (sessiontype === "poker") {
+      await delay(500);
+      this.openStorySelection();
     }
   };
 
@@ -93,18 +120,18 @@ class Dashboard extends Component {
     console.log("submitting selected stories");
 
     await this.props.chooseStories(storysubmit);
-
     this.setState({ pokerShow: false });
+    await delay(1000);
     this.socket.send(
       JSON.stringify({
         create_session_kate: "create_session_kate"
       })
     );
+    this.setState({ pokerShow: false, storySelectionShow: false });
+    //this.startSession(this.state.pokersessioncreating);
   };
 
   startSession = sessionInfo => {
-    console.log("going to session lobby");
-    console.log(sessionInfo);
     this.props.setCurrentSession(sessionInfo);
     //this.props.history.push("/retro");
     this.socket.send(
@@ -113,12 +140,14 @@ class Dashboard extends Component {
       })
     );
     this.socket.close();
+
     this.props.history.push("/lobby");
   };
 
   onDeleteSession = async sessionid => {
     const session = { session: sessionid };
     await this.props.deleteSession(session);
+    await delay(1000);
     //this.props.getAllSessions();
     this.socket.send(
       JSON.stringify({
@@ -131,6 +160,10 @@ class Dashboard extends Component {
     this.props.setPokerShow(false);
 
     this.setState({ pokerShow: true });
+  };
+
+  openStorySelection = () => {
+    this.setState({ pokerShow: false, storySelectionShow: true });
   };
 
   render() {
@@ -146,7 +179,7 @@ class Dashboard extends Component {
           <h3
             style={{
               fontSize: "23px",
-              color: "#2a63b2",
+              color: "#242423",
               marginBottom: "15px"
             }}
           >
@@ -164,7 +197,7 @@ class Dashboard extends Component {
             <h3
               style={{
                 fontSize: "23px",
-                color: "#2a63b2",
+                color: "#242423",
                 marginBottom: "15px"
               }}
             >
@@ -313,6 +346,14 @@ class Dashboard extends Component {
 
                     <CreatePoker
                       show={this.state.pokerShow}
+                      onHide={this.pokerClose}
+                      onSubmit={this.onSubmit}
+                      onStorySelect={this.onStorySelect}
+                      onClose={this.openStorySelection}
+                    />
+
+                    <ChoosePokerStories
+                      show={this.state.storySelectionShow}
                       onHide={this.pokerClose}
                       onSubmit={this.onSubmit}
                       onStorySelect={this.onStorySelect}

@@ -127,9 +127,9 @@
 }
 
 .submitJiraButton {
-  background-color: #136ca6;
+  background-color: #f5cb5c;
+  color: #242423;
   border: none;
-  color: white;
   padding: 12px;
   text-align: center;
   text-decoration: none;
@@ -142,9 +142,9 @@
 }
 
 .viewJiraButton {
-  background-color: #136ca6;
+  background-color: #f5cb5c;
+  color: #242423;
   border: none;
-  color: white;
   padding: 12px;
   text-align: center;
   text-decoration: none;

@@ -53,7 +53,10 @@ export const createSession = sessionData => dispatch => {
 
         dispatch(fetchStories(fetchStoryData));
       } else {
-        dispatch(getAllSessions());
+        //dispatch(getAllSessions());
+        dispatch({
+          type: SESSION_LOADING
+        });
       }
     })
     .catch(err =>

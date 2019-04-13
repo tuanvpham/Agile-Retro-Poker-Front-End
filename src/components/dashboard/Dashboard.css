@@ -15,9 +15,9 @@
 }
 
 .joinbutton {
-  background-color: #136ca6;
+  background-color: #f5cb5c;
   border: none;
-  color: white;
+  color: #242423;
   padding: 8px;
   text-align: center;
   text-decoration: none;
@@ -29,10 +29,9 @@
 }
 
 .deletebutton {
-  border-color: #c90e0e;
   border: solid 1px;
-  color: #c90e0e;
-  background-color: white;
+  color: white;
+  background-color: #990000;
   padding: 8px;
   text-align: center;
   text-decoration: none;

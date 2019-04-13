@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import { Modal, Button, Checkbox } from "react-bootstrap";
 import "./Dashboard.css";
+import Spinner from "../common/Spinner";
 
 import TextFieldGroup from "../common/TextFieldGroup";
 import DropDownMenu from "../common/DropDownMenu";
@@ -61,8 +62,6 @@ class CreatePoker extends Component {
       this.state.card_type,
       this.state.velocity
     );
-
-    this.props.onClose();
   };
 
   componentWillReceiveProps(nextProps) {
@@ -137,64 +136,84 @@ class CreatePoker extends Component {
         </Modal.Header>
         <Modal.Body>
           <div>
-            <form onSubmit={this.onSubmit}>
-              <TextFieldGroup
-                placeholder="Session Name"
-                label="Session Name"
-                name="title"
-                type="text"
-                value={this.state.title}
-                onChange={this.onChange}
-              />
-              {this.state.isDisabled == true ? (
-                <font color="red">
-                  Session Name cannot contain a hyphen or period.
-                </font>
-              ) : (
-                ""
-              )}
-              <p />
+            {this.state.storySelection.length === 0 ? (
+              <Spinner />
+            ) : (
+              <div>
+                <div
+                  style={{
+                    width: "48%",
+                    marginRight: "5px",
+                    float: "left",
+                    fontSize: "11px"
+                  }}
+                >
+                  <center>
+                    <h4>Available Stories:</h4>
+                  </center>
+                  {this.state.storySelection.map((story, i) =>
+                    !story.selected ? (
+                      <div key={i}>
+                        <label>
+                          <IconButton
+                            onClick={() => this.addStory(i)}
+                            style={{
+                              width: "15px",
+                              height: "15px",
+                              padding: "0px",
+                              marginRight: "3px"
+                            }}
+                          >
+                            <MdAdd />
+                          </IconButton>
 
-              <TextFieldGroup
-                placeholder="Description"
-                name="description"
-                label="Description"
-                type="text"
-                multiline="true"
-                value={this.state.description}
-                onChange={this.onChange}
-              />
-              <p />
-
-              <TextFieldGroup
-                placeholder="Team Velocity"
-                name="velocity"
-                label="Velocity"
-                type="text"
-                multiline="true"
-                value={this.state.velocity}
-                onChange={this.onChange}
-              />
-              <p />
-
-              <DropDownMenu
-                name="card_type"
-                value={this.state.card_type}
-                onChange={this.onChangeDropdown}
-              />
-            </form>
+                          {story.title}
+                        </label>
+                      </div>
+                    ) : null
+                  )}
+                </div>
+                <div
+                  style={{
+                    width: "48%",
+                    marginLeft: "5px",
+                    float: "right",
+                    fontSize: "11px"
+                  }}
+                >
+                  <center>
+                    <h4>Selected:</h4>
+                  </center>
+                  {this.state.storySelection.map((story, i) =>
+                    story.selected ? (
+                      <div key={i}>
+                        <label>
+                          <IconButton
+                            onClick={() => this.removeStory(i)}
+                            style={{
+                              width: "15px",
+                              height: "15px",
+                              padding: "0px",
+                              marginRight: "3px"
+                            }}
+                          >
+                            <MdRemove />
+                          </IconButton>
+                          {story.title}
+                        </label>
+                      </div>
+                    ) : null
+                  )}
+                </div>
+              </div>
+            )}
           </div>
         </Modal.Body>
         <Modal.Footer>
           <div>
-            <Button
-              variant="outline-success"
-              onClick={() => this.chooseStoriesButton()}
-              disabled={this.state.isDisabled}
-            >
-              Select Stories
+            <Button onClick={() => this.finalCreatePoker()}>
+              Create Session
             </Button>
-            <Button onClick={() => this.cancelButton()}>Cancel</Button>
           </div>
         </Modal.Footer>
       </Modal>

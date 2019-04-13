@@ -1,12 +1,18 @@
 import React, { Component } from "react";
 import "./RetroBoard.css";
 import { Table } from "react-bootstrap";
+import Spinner from "../common/Spinner";
 
 export default class RetroSummary extends Component {
   constructor(props) {
     super(props);
-    this.state = {};
+    this.state = { loading: false };
   }
+
+  submittingLoading = () => {
+    this.setState({ loading: true });
+    this.props.submitToJira();
+  };
 
   render() {
     return (
@@ -16,25 +22,35 @@ export default class RetroSummary extends Component {
             <h1 style={{ paddingBottom: "10px" }}>
               {this.props.session.title} - RetroBoard Summary
             </h1>
-            <div className="innerTable">
-              <p>Action items created:</p>
-              <Stories stories={this.props.actionItems} />
+            {this.state.loading ? (
+              <div>
+                <Spinner />
+              </div>
+            ) : (
+              <div>
+                <div className="innerTable">
+                  <p>Action items created:</p>
+                  <Stories stories={this.props.actionItems} />
+                </div>
+              </div>
+            )}
+          </div>
+          {this.state.loading ? null : (
+            <div className="popup_footer">
+              <button
+                onClick={this.props.closeSummary}
+                className="closePopupButton"
+              >
+                Close
+              </button>
+              <button
+                onClick={this.submittingLoading}
+                className="submitJiraButton"
+              >
+                Submit to Jira
+              </button>
             </div>
-          </div>
-          <div className="popup_footer">
-            <button
-              onClick={this.props.closeSummary}
-              className="closePopupButton"
-            >
-              Close
-            </button>
-            <button
-              onClick={this.props.submitToJira}
-              className="submitJiraButton"
-            >
-              Submit to Jira
-            </button>
-          </div>
+          )}
         </div>
       </div>
     );

@@ -23,7 +23,8 @@ class Lobby extends Component {
       isOwner: false,
       isOwnerClicksStartGame: false,
       isRetro: false,
-      isSessionStarted: false
+      isSessionStarted: false,
+      isCancelGame: false
     };
 
     this.socket = new WebSocket(
@@ -43,7 +44,7 @@ class Lobby extends Component {
         Authorization: `JWT ${localStorage.getItem("jwtToken")}`
       }
     })
-      .then(res => res.json())
+      .then(res => console.log(res))
       .then(res => {
         for (var key in res) {
           var player = res[key];
@@ -122,6 +123,7 @@ class Lobby extends Component {
             break;
         }
       } else if (dataFromSocket.hasOwnProperty("start_game")) {
+        console.log("session type:" + this.props.session.session);
         if (this.props.session.session.session_type === "R") {
           this.props.history.push("/retro");
         } else {
@@ -133,16 +135,14 @@ class Lobby extends Component {
           isRetro: true
         });
       } else if (dataFromSocket.hasOwnProperty("cancel_game")) {
-        alert("Owner of this session has cancelled the game.");
-        this.socket.close();
-        this.props.history.push("/home");
+        this.setState({ isCancelGame: true });
+        //this.socket.close();
+        //this.props.history.push("/home");
       } else if (dataFromSocket.hasOwnProperty("exit_game")) {
         let indexPlayer = this.state.players.indexOf(dataFromSocket.player);
         this.setState(prevState => ({
           players: prevState.players.filter((_, i) => i !== indexPlayer)
         }));
-        this.socket.close();
-        this.props.history.push("/home");
       }
     };
   }
@@ -166,6 +166,12 @@ class Lobby extends Component {
         player: this.props.auth.user.email
       })
     );
+
+    this.props.history.push("/home");
+  };
+
+  lobbyExit = () => {
+    this.props.history.push("/home");
   };
 
   displayRetro = () => {
@@ -212,6 +218,26 @@ class Lobby extends Component {
           </div>
         ) : (
           <div className="lobbyContainer">
+            {this.state.isCancelGame ? (
+              <div className="lpopup">
+                <div className="lpopup_inner">
+                  <div className="lpopup_content">
+                    <h1 style={{ paddingBottom: "10px" }}>Session Cancelled</h1>
+                    <div className="innerTable">
+                      <p>This session has been cancelled by the owner.</p>
+                    </div>
+                    <div className="lpopup_footer">
+                      <button
+                        onClick={this.lobbyExit}
+                        className="lclosePopupButton"
+                      >
+                        Return to Dashboard
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            ) : null}
             {this.state.isOwnerClicksStartGame ? (
               <div>{this.state.isRetro ? "" : ""}</div>
             ) : (

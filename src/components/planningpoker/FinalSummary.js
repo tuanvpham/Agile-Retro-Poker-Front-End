@@ -16,7 +16,9 @@ export default class FinalSummary extends Component {
             <h1 style={{ paddingBottom: "10px" }}>
               {this.props.session.title} - Game Summary
             </h1>
-            <div className="jiraSuccess">Successfully submitted to Jira!</div>
+            <div className="jiraSuccess">
+              Successfully submitted story points to Jira!
+            </div>
           </div>
           <div className="popup_footer">
             <button

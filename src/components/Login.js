@@ -103,6 +103,7 @@ class Login extends Component {
                   type="submit"
                   value="Log in with Jira"
                   className="btn btn-info btn-block mt-4"
+                  style={{ backgroundColor: "#f5cb5c", color: "#242423" }}
                 />
               </div>
             </form>

@@ -1,11 +1,42 @@
 .bg-customcolor {
-  background-color: #195780;
+  background-color: #242423;
 }
 
-.navbar-dark .navbar-nav .nav-link {
-  color: rgb(245, 245, 245);
+.navbar-dark .navbar-nav {
+  color: #f5cb5c;
 }
 
 .navbar {
   height: 7vh;
+}
+
+.oldbg {
+  background-color: #195780;
+}
+
+.navbar-brand {
+  color: #f5cb5c;
+}
+.navbar-brand:hover {
+  color: #f5cb5c;
+}
+
+.dropdown-toggle {
+  color: #f5cb5c;
+}
+
+.dropdown-toggle:hover {
+  color: #f5cb5c;
+}
+
+.dropdown-menu {
+  color: #f5cb5c;
+}
+
+.dropdown-menu:hover {
+  color: #f5cb5c;
+}
+
+.nav-link .navbarDropdownMenuLink {
+  color: #f5cb5c;
 }

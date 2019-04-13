@@ -5,7 +5,9 @@ import { Table } from "react-bootstrap";
 export default class RetroFinalSummary extends Component {
   constructor(props) {
     super(props);
-    this.state = {};
+    this.state = {
+      loading: false
+    };
   }
 
   render() {

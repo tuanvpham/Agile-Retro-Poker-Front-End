@@ -41,7 +41,7 @@ class Navbar extends Component {
     );
 
     return (
-      <nav className="navbar navbar-expand-sm navbar-static-top navbar-dark bg-customcolor mb-4">
+      <nav className="navbar navbar-expand-sm navbar-static-top  bg-customcolor mb-4">
         <div className="container-fluid">
           <Link className="navbar-brand" to="/">
             Agile Command Central

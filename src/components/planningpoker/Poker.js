@@ -307,15 +307,15 @@ class Poker extends Component {
           }));
         }
       } else if (dataFromSocket.hasOwnProperty("end_game")) {
-        this.setState({ isEndGame: true });
-        this.socket.close();
+        this.setState({ finalSummaryShow: true, isEndGame: false });
+        //this.socket.close();
         // remove users from socket
       }
     };
 
     // kick users out of session here
     this.socket.onclose = () => {
-      this.props.history.push("/home");
+      //this.props.history.push("/home");
     };
   }
 
@@ -725,7 +725,6 @@ class Poker extends Component {
 
   resetCards = () => {
     this.setState(prevState => ({
-      selectedStoryIndex: prevState.selectedStoryIndex + 1,
       card0sel: false,
       card1sel: false,
       card2sel: false,
@@ -751,13 +750,8 @@ class Poker extends Component {
   };
 
   submitToJira = () => {
-    /*
-        let currentStory = this.state.stories[this.state.selectedStoryIndex]
-        this.socket.send(JSON.stringify({
-            'end_game': 'Owner wants to end session',
-            'story': currentStory.id
-        }))
-        */
+    let currentStory = this.state.stories[this.state.selectedStoryIndex];
+
     fetch("http://localhost:8000/end_poker/", {
       method: "POST",
       headers: {
@@ -770,7 +764,13 @@ class Poker extends Component {
         secret_access_token: localStorage.getItem("secret_access_token")
       })
     }).then(res => {
-      this.setState({ finalSummaryShow: true, isEndGame: false });
+      //this.setState({ finalSummaryShow: true, isEndGame: false });
+      this.socket.send(
+        JSON.stringify({
+          end_game: "Owner wants to end session",
+          story: currentStory.id
+        })
+      );
     });
   };
 
@@ -791,6 +791,7 @@ class Poker extends Component {
       isEndGame: false
     });
     this.socket.close();
+    this.props.history.push("/home");
   };
 
   updateVelocityProgress = () => {
@@ -862,7 +863,7 @@ class Poker extends Component {
                   currentStory={currentStory}
                 />
               </div>{" "}
-              {this.state.isEndGame ? (
+              {this.state.isEndGame && this.state.isOwner ? (
                 <PokerSummary
                   stories={this.state.stories}
                   closeSummary={this.returnToGame}
@@ -1401,9 +1402,21 @@ class Poker extends Component {
                     </IconButton>
                   </div>
                 ) : (
-                  <button onClick={() => this.exitSession()}>
-                    Exit Session
-                  </button>
+                  <IconButton
+                    style={{
+                      margin: "0px",
+                      padding: "0px",
+                      zIndex: "1000",
+                      backgroundColor: "transparent"
+                    }}
+                    disableRipple="true"
+                    onClick={() => this.exitSession()}
+                  >
+                    <div style={{ display: "grid" }}>
+                      <MdExitToApp size={65} />
+                      Exit Session
+                    </div>
+                  </IconButton>
                 )}
               </center>
             </div>
