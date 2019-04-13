@@ -27,7 +27,8 @@ class CreatePoker extends Component {
       errors: {},
       sessionCreated: false,
       storySelection: [],
-      isDisabled: false
+      isDisabled: false,
+      storyCount: 0
     };
 
     this.onChange = this.onChange.bind(this);
@@ -78,7 +79,6 @@ class CreatePoker extends Component {
         sessionCreated: true,
         storySelection: stories
       });
-
       /*this.setState({
         sessionCreated: true,
         storySelection: Array.from(nextProps.session.sessionStories)
@@ -102,6 +102,9 @@ class CreatePoker extends Component {
         [itemNum]: { selected: { $set: true } }
       })
     });
+    this.setState({
+      storyCount: this.state.storyCount+1
+    });
   };
 
   removeStory = itemNum => {
@@ -109,6 +112,9 @@ class CreatePoker extends Component {
       storySelection: update(this.state.storySelection, {
         [itemNum]: { selected: { $set: false } }
       })
+    });
+    this.setState({
+      storyCount: this.state.storyCount-1
     });
   };
 
@@ -124,8 +130,8 @@ class CreatePoker extends Component {
       velocity: 50,
       sessionCreated: false
     });
-
     this.props.onStorySelect(this.state.storySelection);
+    localStorage.removeItem('pokerSession');
   };
 
   render() {
@@ -211,7 +217,7 @@ class CreatePoker extends Component {
         </Modal.Body>
         <Modal.Footer>
           <div>
-            <Button onClick={() => this.finalCreatePoker()}>
+            <Button onClick={() => this.finalCreatePoker()} disabled={this.state.storyCount <= 0}>
               Create Session
             </Button>
           </div>

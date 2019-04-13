@@ -16,7 +16,8 @@ class CreateRetro extends Component {
       },
       velocity: 0,
       sessiontype: "retro",
-      errors: {}
+      errors: {},
+      isInvalidTitle: false
     };
 
     this.onChange = this.onChange.bind(this);
@@ -24,26 +25,49 @@ class CreateRetro extends Component {
 
   onChange(e) {
     this.setState({ [e.target.name]: e.target.value });
+    if (
+      e.target.value.indexOf("-") !== -1 ||
+      e.target.value.indexOf(/\./) !== -1 ||
+      e.target.value.length <= 0
+    ) {
+      this.setState({ isInvalidTitle: true });
+    } else {
+      this.setState({ isInvalidTitle: false });
+    }
+    let i = 0;
+    for(i = 0; i < this.props.sessions.length; i++) {
+      if(this.props.sessions[i].title === e.target.value) {
+        this.setState({ isInvalidTitle: true });
+        break;
+      }
+    }
   }
 
   cancelButton() {
-    this.setState({ title: "", description: "" });
+    this.setState({ title: "", description: "", isInvalidTitle: false });
     this.props.onHide();
   }
 
   submitRetro = () => {
-    this.props.onSubmit(
-      this.state.title.replace(/\s+/g, "-"),
-      this.state.description,
-      this.state.sessiontype,
-      this.state.card_type,
-      this.state.velocity
-    );
+    if(this.state.title.length <= 0) {
+      this.setState({
+        isInvalidTitle: true
+      })
 
-    this.setState({
-      title: "",
-      description: ""
-    });
+    } else {
+      this.props.onSubmit(
+        this.state.title.replace(/\s+/g, "-"),
+        this.state.description,
+        this.state.sessiontype,
+        this.state.card_type,
+        this.state.velocity
+      );
+
+      this.setState({
+        title: "",
+        description: ""
+      });
+    }
   };
 
   render() {
@@ -69,6 +93,13 @@ class CreateRetro extends Component {
                 value={this.state.title}
                 onChange={this.onChange}
               />
+              {this.state.isInvalidTitle == true ? (
+                <font color="red">
+                  Please enter a valid Session Title.
+                </font>
+              ) : (
+                ""
+              )}
               <p />
 
               <TextFieldGroup
@@ -84,7 +115,7 @@ class CreateRetro extends Component {
           </div>
         </Modal.Body>
         <Modal.Footer>
-          <Button variant="outline-success" onClick={() => this.submitRetro()}>
+          <Button variant="outline-success" onClick={() => this.submitRetro()} disabled={this.state.isInvalidTitle}>
             Create Session
           </Button>
           <Button onClick={() => this.cancelButton()}>Cancel</Button>

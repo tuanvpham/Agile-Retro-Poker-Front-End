@@ -24,9 +24,11 @@ class CreatePoker extends Component {
       velocity: 50,
       sessiontype: "poker",
       errors: {},
+      errorMessage: "",
       sessionCreated: false,
       storySelection: [],
-      isDisabled: false
+      isInvalidTitle: false,
+      isInvalidCardType: true
     };
 
     this.onChange = this.onChange.bind(this);
@@ -39,30 +41,58 @@ class CreatePoker extends Component {
   onChange(e) {
     this.setState({ [e.target.name]: e.target.value });
     if (
-      this.state.title.indexOf("-") !== -1 ||
-      this.state.title.indexOf(/\./) !== -1
+      e.target.value.indexOf("-") !== -1 ||
+      e.target.value.indexOf(/\./) !== -1 ||
+      e.target.value.length <= 0
     ) {
-      this.setState({ isDisabled: true });
+      this.setState({ isInvalidTitle: true });
     } else {
-      this.setState({ isDisabled: false });
+      this.setState({ isInvalidTitle: false });
+    }
+    let i = 0;
+    for(i = 0; i < this.props.sessions.length; i++) {
+      if(this.props.sessions[i].title === e.target.value) {
+        this.setState({ isInvalidTitle: true });
+        break;
+      }
     }
   }
 
   onChangeDropdown = selectedOption => {
     console.log(selectedOption.value);
     this.setState({ card_type: selectedOption });
+    if (
+      this.state.card_type.length <= 0
+    ) {
+      this.setState({ isInvalidCardType: true });
+    } else {
+      this.setState({ isInvalidCardType: false });
+    }
   };
 
   chooseStoriesButton = async () => {
-    await this.props.onSubmit(
-      this.state.title.replace(/\s+/g, "-"),
-      this.state.description,
-      this.state.sessiontype,
-      this.state.card_type,
-      this.state.velocity
-    );
+    if(this.state.title.length <= 0) {
+      this.setState({
+        isInvalidTitle: true
+      })
 
-    this.props.onClose();
+    } else {
+      await this.props.onSubmit(
+        this.state.title.replace(/\s+/g, "-"),
+        this.state.description,
+        this.state.sessiontype,
+        this.state.card_type,
+        this.state.velocity
+      );
+
+      this.props.onClose();
+      let newTitle = this.state.title.replace(/\s+/g, "-");
+      localStorage.setItem('pokerSession', newTitle);
+      this.setState({
+        title: "",
+        card_type: ""
+      })
+    }
   };
 
   componentWillReceiveProps(nextProps) {
@@ -79,6 +109,7 @@ class CreatePoker extends Component {
         sessionCreated: true,
         storySelection: stories
       });
+      
 
       /*this.setState({
         sessionCreated: true,
@@ -114,7 +145,7 @@ class CreatePoker extends Component {
   };
 
   cancelButton() {
-    this.setState({ title: "", description: "", card_type: "", velocity: 50 });
+    this.setState({ title: "", description: "", card_type: "", velocity: 50, isInvalidCardType: true });
     this.props.onHide();
   }
 
@@ -146,9 +177,9 @@ class CreatePoker extends Component {
                 value={this.state.title}
                 onChange={this.onChange}
               />
-              {this.state.isDisabled == true ? (
+              {this.state.isInvalidTitle == true ? (
                 <font color="red">
-                  Session Name cannot contain a hyphen or period.
+                  Please enter a valid Session Title.
                 </font>
               ) : (
                 ""
@@ -190,7 +221,7 @@ class CreatePoker extends Component {
             <Button
               variant="outline-success"
               onClick={() => this.chooseStoriesButton()}
-              disabled={this.state.isDisabled}
+              disabled={this.state.isInvalidTitle || this.state.isInvalidCardType}
             >
               Select Stories
             </Button>

@@ -45,7 +45,13 @@ const DropDownMenu = ({
   return (
     <div>
       <label>Card Deck</label>
-      <Select name={name} value={value} onChange={onChange} options={options} />
+      <Select 
+        name={name} 
+        value={value} 
+        onChange={onChange}
+        onFocus={onChange} 
+        options={options} 
+      />
     </div>
   );
 };

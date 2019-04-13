@@ -94,7 +94,6 @@ class Dashboard extends Component {
     };
 
     this.setState({ pokersessioncreating: sessiontype2 });
-
     await this.props.createSession(session);
 
     if (sessiontype === "retro") {
@@ -169,6 +168,15 @@ class Dashboard extends Component {
   render() {
     const { user } = this.props.auth;
     const { sessions, loading } = this.props.session;
+    const deleteSession = this.onDeleteSession;
+    if(sessions !== null && localStorage.getItem('pokerSession') !== null) {
+      sessions.forEach(function(session) {
+          if(session.title === localStorage.getItem('pokerSession')) {
+            deleteSession(session.id);
+            localStorage.removeItem('pokerSession');
+          }
+      })
+    }
 
     let dashboardContent;
 
@@ -332,6 +340,7 @@ class Dashboard extends Component {
                       show={this.state.retroShow}
                       onHide={this.retroClose}
                       onSubmit={this.onSubmit}
+                      sessions={sessions}
                     />
 
                     <Button
@@ -350,6 +359,7 @@ class Dashboard extends Component {
                       onSubmit={this.onSubmit}
                       onStorySelect={this.onStorySelect}
                       onClose={this.openStorySelection}
+                      sessions={sessions}
                     />
 
                     <ChoosePokerStories
@@ -357,6 +367,8 @@ class Dashboard extends Component {
                       onHide={this.pokerClose}
                       onSubmit={this.onSubmit}
                       onStorySelect={this.onStorySelect}
+                      session={this.props.session}
+                      createSession={this.props.createSession}
                     />
                   </div>
                 </div>
