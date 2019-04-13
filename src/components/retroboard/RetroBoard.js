@@ -118,9 +118,10 @@ class RetroBoard extends Component {
     this.socket.onmessage = e => {
       const dataFromSocket = JSON.parse(e.data);
       if (dataFromSocket.hasOwnProperty("end_session_message")) {
-        this.setState({ isEndGame: true });
+        //this.setState({ isEndGame: true });
         //this.socket.close();
         //this.props.history.push("/home");
+        this.setState({ finalSummaryShow: true, isEndGame: false });
       } else if (dataFromSocket.hasOwnProperty("exit_session_message")) {
         alert(this.props.auth.user.username + " left the session");
       } else if (dataFromSocket.hasOwnProperty("delete_item_message")) {
@@ -242,13 +243,18 @@ class RetroBoard extends Component {
   };
 
   endSession = () => {
-    this.socket.send(
-      JSON.stringify({ end_session: "Owner wants to end this session!" })
-    );
+    // this.socket.send(
+    //   JSON.stringify({ end_session: "Owner wants to end this session!" })
+    // );
     //this.props.history.push("/home");
+    this.setState({isEndGame: true})
   };
 
   submitActionItems = () => {
+    this.socket.send(
+      JSON.stringify({ end_session: "Owner wants to end this session!" })
+    );
+  
     fetch("http://localhost:8000/end_retro/", {
       method: "POST",
       headers: {
@@ -261,7 +267,7 @@ class RetroBoard extends Component {
         secret_access_token: localStorage.getItem("secret_access_token")
       })
     }).then(res => {
-      this.setState({ finalSummaryShow: true, isEndGame: false });
+      // this.setState({ finalSummaryShow: true, isEndGame: false });
     });
   };
 
@@ -414,7 +420,7 @@ class RetroBoard extends Component {
     console.log(this.state.wwwAddShow);
     return (
       <div>
-        {this.state.isEndGame ? (
+        {this.state.isEndGame && this.state.isOwner ? (
           <RetroSummary
             actionItems={this.state.actionItems}
             closeSummary={this.endGame}
