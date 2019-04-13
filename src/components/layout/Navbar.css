@@ -2,12 +2,12 @@
   background-color: #242423;
 }
 
-.navbar-dark .navbar-nav {
-  color: #f5cb5c;
-}
-
 .navbar {
   height: 7vh;
+}
+
+.navbar-dark .navbar-nav {
+  color: #f5cb5c;
 }
 
 .oldbg {
